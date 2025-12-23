@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Streak Challenge AI — Toán 9 · Trường PTDTBT THCS Mường Đun</title>
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <style>
+    :root{--bg:#f6f8fc;--text:#0f172a;--muted:#64748b;--pri:#2563eb;--pri2:#1d4ed8;--ok:#16a34a;--bad:#dc2626;--bd:#e2e8f0;--shadow:0 18px 44px rgba(2,6,23,.10);--shadow2:0 12px 30px rgba(2,6,23,.08);--r2:22px}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(1100px 380px at 10% -10%, rgba(37,99,235,.18), transparent 60%),radial-gradient(900px 360px at 90% 0%, rgba(96,165,250,.16), transparent 55%),var(--bg);color:var(--text)}
+    header{position:sticky;top:0;z-index:50;background:rgba(246,248,252,.78);backdrop-filter:blur(14px) saturate(160%);border-bottom:1px solid var(--bd)}
+    .wrap{max-width:1150px;margin:0 auto;padding:16px}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--pri),#60a5fa);box-shadow:0 18px 38px rgba(37,99,235,.26);position:relative;overflow:hidden}
+    .logo:after{content:"";position:absolute;inset:-30px;background:radial-gradient(circle at 30% 20%, rgba(255,255,255,.55), transparent 40%);transform:rotate(12deg)}
+    .brand h1{font-size:15px;margin:0;font-weight:900}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--bd);background:rgba(255,255,255,.7);font-size:12px}
+    .btn{appearance:none;border:1px solid var(--bd);background:#fff;color:var(--text);padding:10px 12px;border-radius:14px;cursor:pointer;font-weight:800;box-shadow:var(--shadow2);transition:transform .08s ease, border-color .15s ease, background .15s ease}
+    .btn:hover{transform:translateY(-1px);border-color:#cbd5e1} .btn:active{transform:translateY(0)}
+    .btn.primary{background:var(--pri);border-color:var(--pri);color:#fff} .btn.primary:hover{background:var(--pri2)}
+    .btn.ghost{background:transparent;box-shadow:none}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}.wrap{padding:14px}}
+    .card{background:rgba(255,255,255,.86);border:1px solid var(--bd);border-radius:var(--r2);box-shadow:var(--shadow);overflow:hidden}
+    .hd{padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .bd{padding:14px 16px}
+    .title{font-weight:950}
+    .muted{color:var(--muted)}
+    .small{font-size:12px}
+    input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:14px;background:#fff;font-size:14px;outline:none}
+    textarea{min-height:96px;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:rgba(37,99,235,.45);box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+    .hero{padding:18px 16px;border:1px solid rgba(37,99,235,.18);background:linear-gradient(135deg, rgba(37,99,235,.12), rgba(255,255,255,.55));border-radius:20px}
+    .hero h2{margin:0 0 6px 0;font-size:18px;font-weight:1000}
+    .hero .sub{font-size:12.5px;color:var(--muted);line-height:1.45}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{font-size:12px;padding:6px 10px;border:1px solid var(--bd);border-radius:999px;background:#fff}
+    .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    @media (max-width:740px){.kpi{grid-template-columns:repeat(2,1fr)}}
+    .kpi .box{padding:12px;border:1px solid var(--bd);border-radius:16px;background:linear-gradient(180deg, rgba(37,99,235,.06), rgba(255,255,255,.55))}
+    .kpi .num{font-size:22px;font-weight:950}
+    .kpi .lab{font-size:12px;color:var(--muted)}
+    .hr{height:1px;background:var(--bd);margin:12px 0}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0b1220;color:#fff;padding:10px 12px;border-radius:14px;opacity:0;pointer-events:none;transition:.22s;max-width:94vw;box-shadow:0 16px 40px rgba(2,6,23,.24)}
+    .toast.show{opacity:1;bottom:26px}
+    .hidden{display:none !important}
+    .help{font-size:12.5px;color:var(--muted);line-height:1.45}
+    .qbox{padding:14px;border:1px solid var(--bd);border-radius:18px;background:#fff;box-shadow:var(--shadow2)}
+    .qtext{font-weight:950;margin:0 0 10px 0;font-size:15px}
+    .opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--bd);border-radius:16px;padding:10px 12px;margin:8px 0;cursor:pointer}
+    .opt:hover{border-color:#cbd5e1;background:#fbfdff}
+    .opt input{width:auto;margin-top:2px}
+    .opt .lab{flex:1}
+    .good{color:var(--ok);font-weight:1000}
+    .bad{color:var(--bad);font-weight:1000}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--bd);padding:8px 6px;text-align:left;font-size:13px}
+    th{color:var(--muted);font-weight:800}
+    .right{text-align:right}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width:820px){.split{grid-template-columns:1fr}}
+    .notice{padding:12px;border:1px dashed rgba(37,99,235,.35);border-radius:16px;background:rgba(255,255,255,.55)}
+    .tag{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--bd);background:#fff}
+  
+/* ===== QR overlay (tối giản) ===== */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;}
+.modalCard{width:min(520px,100%);background:#fff;border:1px solid rgba(15,23,42,.12);border-radius:16px;box-shadow:0 24px 70px rgba(2,6,23,.35);padding:14px;}
+.hidden{display:none !important;}
+
+</style>
+
+  <!-- XLSX (Excel) + Mammoth (DOCX) for offline import -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+
+</head>
+<body>
+<header>
+  <div class="wrap row" style="justify-content:space-between">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Streak Challenge AI — Toán 9</h1>
+        <p>Trường PTDTBT THCS Mường Đun · Offline/PWA · Import CSV · Báo cáo 7 ngày</p>
+      </div>
+    </div>
+    <div class="row">
+      <span class="pill" id="pillMode">Chưa đăng nhập</span>
+      <button class="btn ghost" id="btnInstall">⬇️ Cài app</button>
+      <button class="btn ghost" id="btnResetAll">🧹 Reset</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- LOGIN -->
+  <div class="grid" id="viewLogin">
+    <div class="card">
+      <div class="hd"><div class="title">Bản nạp dự án (Submission-ready)</div><span class="pill">2 mạch · Đại số + Hình học</span></div>
+      <div class="bd">
+        <div class="hero">
+          <h2>“Mỗi ngày 5 phút — học đều 7 ngày”</h2>
+          <div class="sub">AI chọn câu theo <b>yêu cầu</b> + <b>lỗ hổng</b> + <b>độ khó thích nghi</b>. Sai quá nhanh → <b>Gate</b> gợi mở + hint để chống đoán mò.</div>
+          <div class="chips">
+            <span class="chip">✅ Offline</span><span class="chip">✅ Import CSV</span><span class="chip">✅ Báo cáo 7 ngày</span><span class="chip">✅ PWA</span>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <div class="split">
+          <div><label class="small muted">Vai trò</label><select id="role"><option value="teacher">Giáo viên</option><option value="student">Học sinh</option><option value="parent">Phụ huynh</option></select></div>
+          <div><label class="small muted">Mã</label><input id="loginId" placeholder="gv01 hoặc hs001" /></div>
+        </div>
+        <div style="margin-top:10px"><label class="small muted">Mật khẩu</label><input id="loginPw" type="password" placeholder="Demo: 123456" /></div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn primary" id="btnLogin">➡️ Vào hệ thống</button>
+          <button class="btn" id="btnQRLogin">📷 QR</button>
+          <button class="btn" id="btnDemo">✨ Tạo dữ liệu demo</button>
+          <button class="btn" id="btnGuide">📌 Hướng dẫn nạp dự án</button>
+        </div>
+        <div class="hr"></div>
+        <div id="guideBox" class="notice hidden">
+          <div class="title" style="margin-bottom:6px">Checklist “Nạp dự án”</div>
+          <div class="help">
+            1) Bấm <b>Tạo dữ liệu demo</b> → đăng nhập GV: <b>gv01/123456</b>.<br>
+            2) Import <b>questionbank_toan9_300.csv</b> + danh sách HS (CSV).<br>
+            3) Chọn HS → bấm <b>⚡ Tạo dữ liệu test 7 ngày</b> → <b>Xem báo cáo</b> → <b>In/Lưu PDF</b> để nộp minh chứng.<br>
+            4) Nếu nộp dạng “ứng dụng”: Chrome → Add to Home screen (hoặc bấm “Cài app”).<br>
+          </div>
+        </div>
+        <div class="kpi" style="margin-top:12px">
+          <div class="box"><div class="num" id="kpiQB">0</div><div class="lab">Câu hỏi</div></div>
+          <div class="box"><div class="num" id="kpiStu">0</div><div class="lab">Học sinh</div></div>
+          <div class="box"><div class="num" id="kpi7">0</div><div class="lab">Lượt làm (7 ngày)</div></div>
+          <div class="box"><div class="num" id="kpiStreak">0</div><div class="lab">Streak cao nhất</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd"><div class="title">Giải thích “AI” cho giám khảo</div><span class="pill">Pitch 30 giây</span></div>
+      <div class="bd">
+        <div class="help">
+          <b>AI chọn câu theo 3 tín hiệu:</b><br>
+          ① Yêu cầu tiếng Việt → map keyword → chủ đề.<br>
+          ② Lỗ hổng (mastery thấp) → ưu tiên bù lấp.<br>
+          ③ Độ khó thích nghi (mastery tăng) → nâng diff 1→2→3.<br><br>
+          <b>Chống đoán mò:</b> sai quá nhanh → bật <b>Gate</b> (câu dễ + hint bắt buộc).<br><br>
+          <b>Minh chứng:</b> báo cáo 7 ngày theo ngày + streak + chủ đề yếu.
+        </div>
+        <div class="hr"></div>
+        <div class="help"><b>Lưu ý SGK:</b> mặc định dùng câu demo tự tạo; không sao chép nguyên văn SGK.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEACHER -->
+  <div class="hidden" id="viewTeacher">
+    <div class="grid">
+      <div class="card">
+        <div class="hd">
+          <div><div class="title">Bảng điều khiển giáo viên</div><div class="small muted">Import · Báo cáo · In/PDF</div></div>
+          <div class="row"><span class="pill" id="pillTeacher"></span><button class="btn" id="btnLogoutT">🚪 Đăng xuất</button></div>
+        </div>
+        <div class="bd">
+          <div class="row">
+            <button class="btn" id="btnImportStudents">👥 Import HS (CSV)</button>
+            <button class="btn" id="btnImportStudentsXLSX">📊 Import HS (Excel)</button>
+            <button class="btn" id="btnImportQuestions">📚 Import câu hỏi (CSV)</button>
+            <button class="btn" id="btnImportQuestionsDOCX">📝 Import câu hỏi (Word)</button>
+            <button class="btn" id="btnExportDB">⬇️ Export JSON</button>
+            <button class="btn" id="btnAddStudentManual">➕ Thêm HS</button>
+            <button class="btn" id="btnAddTeacherManual">➕ Thêm GV</button>
+          </div>
+          <div id="manualStudentBox" class="notice hidden" style="margin-top:10px">
+            <div class="row" style="justify-content:space-between">
+              <div class="title">Thêm học sinh thủ công</div>
+              <span class="pill">Mật khẩu mặc định: <b>123456</b></span>
+            </div>
+            <div class="split" style="margin-top:10px">
+              <div>
+                <label class="small muted">Mã học sinh (ID)</label>
+                <input id="mstuId" placeholder="VD: hs010" />
+              </div>
+              <div>
+                <label class="small muted">Họ và tên</label>
+                <input id="mstuName" placeholder="VD: Lò Thị C" />
+              </div>
+            </div>
+            <div class="split" style="margin-top:10px">
+              <div>
+                <label class="small muted">Lớp</label>
+                <input id="mstuClass" placeholder="VD: 9A" />
+              </div>
+              <div>
+                <label class="small muted">Mật khẩu (tuỳ chọn)</label>
+                <input id="mstuPw" placeholder="Để trống = 123456" />
+              </div>
+            </div>
+            <div class="row" style="margin-top:12px">
+              <button class="btn primary" id="btnSaveManualStudent">💾 Lưu học sinh</button>
+              <button class="btn" id="btnClearManualStudent">🧽 Xoá ô nhập</button>
+              <span class="help">Nhập xong bấm “Lưu” → HS xuất hiện trong danh sách.</span>
+            </div>
+          </div>
+
+
+          <div id="manualTeacherBox" class="notice hidden" style="margin-top:10px">
+            <div class="row" style="justify-content:space-between">
+              <div class="title">Thêm giáo viên thủ công</div>
+              <span class="pill">Mật khẩu mặc định: <b>123456</b></span>
+            </div>
+            <div class="split" style="margin-top:10px">
+              <div>
+                <label class="small muted">Mã giáo viên (ID)</label>
+                <input id="mtchId" placeholder="VD: gv02" />
+              </div>
+              <div>
+                <label class="small muted">Họ và tên</label>
+                <input id="mtchName" placeholder="VD: Cô Lan" />
+              </div>
+            </div>
+            <div class="split" style="margin-top:10px">
+              <div>
+                <label class="small muted">Mật khẩu (tuỳ chọn)</label>
+                <input id="mtchPw" placeholder="Để trống = 123456" />
+              </div>
+              <div>
+                <label class="small muted">Ghi chú</label>
+                <div class="help">GV mới có thể đăng nhập ngay với vai trò <b>Giáo viên</b>.</div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:12px">
+              <button class="btn primary" id="btnSaveManualTeacher">💾 Lưu giáo viên</button>
+              <button class="btn" id="btnClearManualTeacher">🧽 Xoá ô nhập</button>
+              <span class="help">Nhập xong bấm “Lưu” → đăng nhập bằng ID/PW.</span>
+            </div>
+          </div>
+
+          <div id="settingsBoxTeacher" class="notice" style="margin-top:10px">
+            <div class="row" style="justify-content:space-between;align-items:flex-start">
+              <div>
+                <div class="title">Cài đặt số câu hỏi mỗi ngày</div>
+                <div class="help">Giáo viên đặt <b>mặc định</b>. Học sinh vẫn có thể tự chọn khi làm bài.</div>
+              </div>
+              <span class="pill">3–15 câu</span>
+            </div>
+            <div class="split" style="margin-top:10px">
+              <div>
+                <label class="small muted">Mặc định số câu / ngày</label>
+                <select id="teacherPerDay">
+                  <option value="3">3</option>
+                  <option value="5">5</option>
+                  <option value="7">7</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                </select>
+              </div>
+              <div>
+                <label class="small muted">Gợi ý</label>
+                <div class="help">5–7 câu để demo mượt và có đủ dữ liệu AI.</div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:12px">
+              <button class="btn primary" id="btnSaveTeacherPerDay">💾 Lưu cài đặt</button>
+              <span class="help">Lưu offline trong trình duyệt.</span>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="btnSeed7">⚡ Tạo dữ liệu test 7 ngày</button>
+            <button class="btn" id="btnNextDay">⏭️ +1 ngày (Test)</button>
+            <button class="btn" id="btnResetDay">🔁 Reset ngày Test</button>
+          </div>
+          <div class="hr"></div>
+          <div class="split" style="align-items:end">
+            <div><label class="small muted">Chọn học sinh</label><select id="teacherStudentSelect"></select></div>
+            <div><label class="small muted">Nhận xét</label><input id="teacherComment" placeholder="VD: Tiến bộ hệ PT; cần luyện góc nội tiếp." /></div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="btnViewReport">📊 Xem báo cáo 7 ngày</button>
+            <button class="btn" id="btnPrintReport">🖨 In / Lưu PDF</button>
+            <button class="btn" id="btnViewHistoryT">🗂 Xem kết quả chi tiết</button>
+          </div>
+          <div id="teacherHistory" style="margin-top:10px"></div>
+          <div class="hr"></div>
+          <div class="split">
+            <div><label class="small muted">Lọc theo chủ đề</label><select id="filterSkill"></select></div>
+            <div><label class="small muted">Tìm theo từ khoá</label><input id="filterText" placeholder="VD: góc nội tiếp, hệ phương trình..." /></div>
+          </div>
+          <div class="help" style="margin-top:8px">Xem nhanh giúp demo: đủ câu dễ/vừa/khó theo từng chủ đề.</div>
+          <div id="qPreview" style="margin-top:10px"></div>
+          <div class="hr"></div>
+          <div id="teacherReport"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd"><div class="title">Mẫu CSV chuẩn</div><span class="pill">copy</span></div>
+        <div class="bd">
+          <div class="help"><b>HS CSV:</b></div>
+          <pre style="white-space:pre-wrap;border:1px solid var(--bd);border-radius:14px;padding:10px;background:#fbfbfb">id,name,class
+hs001,Nguyễn Văn A,9A
+hs002,Lò Thị B,9A</pre>
+          <div class="help"><b>Câu hỏi CSV (header):</b></div>
+          <pre style="white-space:pre-wrap;border:1px solid var(--bd);border-radius:14px;padding:10px;background:#fbfbfb">subject,skill,diff,text,A,B,C,D,ans,explain,hint1,hint2,hint3</pre>
+          <div class="help">diff: 1=dễ, 2=vừa, 3=khó. ans ∈ {A,B,C,D}. skill phải đúng ID chủ đề.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDENT -->
+  <div class="hidden" id="viewStudent">
+    <div class="grid">
+      <div class="card">
+        <div class="hd">
+          <div><div class="title" id="stuTitle">Học sinh</div><div class="small muted">Mỗi ngày <b id="stuPerDayLabel">3</b> câu · 7 ngày liên tục</div></div>
+          <div class="row"><span class="pill" id="pillStudent"></span><button class="btn" id="btnLogoutS">🚪 Đăng xuất</button></div>
+        </div>
+        <div class="bd">
+          <div class="row" style="justify-content:space-between">
+            <span class="pill">🔥 Streak: <b id="stuStreak">0</b></span>
+            <span class="pill">⚡ Năng lượng: <b id="stuEnergy">0</b></span>
+            <span class="pill">🏁 Điểm: <b id="stuScore">0</b></span>
+            <span class="pill">🎯 Lỗ hổng: <b id="stuWeak">—</b></span>
+          </div>
+          <div class="hr"></div>
+          <label class="small muted">Yêu cầu</label>
+          <textarea id="stuReq" placeholder="VD: em muốn luyện hệ phương trình / góc nội tiếp / bậc hai..."></textarea>
+          <div class="split" style="margin-top:10px;align-items:end">
+            <div>
+              <label class="small muted">Số câu hôm nay</label>
+              <select id="studentPerDay">
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="7">7</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+              </select>
+            </div>
+            <div class="help">Bạn có thể tăng số câu để luyện nhiều hơn (khuyến nghị 5–7).</div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="btnStart">▶️ Bắt đầu phiên học</button>
+            <button class="btn" id="btnShowWeek">📅 Báo cáo 7 ngày</button>
+            <button class="btn" id="btnGame">🎮 Trò chơi</button>
+            <button class="btn" id="btnMyQR">🔳 QR đăng nhập</button>
+            <button class="btn" id="btnResetToday">♻️ Làm lại hôm nay</button>
+          </div>
+          <div class="hr"></div>
+          <div id="quizArea"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd"><div class="title">Tóm tắt tuần</div><span class="pill" id="pillToday"></span></div>
+        <div class="bd"><div id="weekReportMini" class="help"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="filePicker" class="hidden" accept=".csv,.txt,.json,.xlsx,.xls,.docx" />
+
+  <!-- PARENT -->
+  <div class="hidden" id="viewParent">
+    <div class="topbar">
+      <div>
+        <div class="title" id="parTitle">Phụ huynh</div>
+        <div class="sub small muted" id="parSub">Giám sát tiến độ học tập của con</div>
+      </div>
+      <div class="row">
+        <button class="btn" id="btnLinkChildQR">➕ Liên kết con bằng QR</button>
+        <button class="btn" id="btnRefreshP">🔄 Làm mới</button>
+        <button class="btn" id="btnLogoutP">🚪 Đăng xuất</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="bd">
+        <div class="split">
+          <div>
+            <label class="small muted">Chọn con</label>
+            <select id="selChild"></select>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:10px">
+            <button class="btn" id="btnShowWeekP">📅 Báo cáo 7 ngày</button>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <div id="parentArea"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+if ("serviceWorker" in navigator) window.addEventListener("load", ()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+let deferredPrompt=null; window.addEventListener("beforeinstallprompt",(e)=>{e.preventDefault();deferredPrompt=e;});
+document.getElementById("btnInstall").onclick=async()=>{ if(!deferredPrompt){toast("Trình duyệt chưa hỗ trợ hoặc app đã cài.");return;} deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; };
+
+const LS_KEY="MDUN_STREAK_AI_DB_V3_SUBMIT";
+const TEST_DAY_OFFSET_KEY="MDUN_TEST_DAY_OFFSET_V3";
+const DEFAULT_SKILLS=[{"id": "alg_root", "name": "Đại số: Căn thức & biến đổi"}, {"id": "alg_poly", "name": "Đại số: Đa thức & hằng đẳng thức"}, {"id": "alg_linear_eq", "name": "Đại số: Phương trình bậc nhất"}, {"id": "alg_inequality", "name": "Đại số: Bất phương trình"}, {"id": "alg_system", "name": "Đại số: Hệ phương trình 2 ẩn"}, {"id": "alg_quadratic", "name": "Đại số: Phương trình bậc hai"}, {"id": "alg_function_linear", "name": "Đại số: Hàm số bậc nhất & đồ thị"}, {"id": "alg_statistics", "name": "Đại số: Thống kê cơ bản"}, {"id": "geo_pythag", "name": "Hình học: Định lý Pythagore"}, {"id": "geo_trig", "name": "Hình học: Hệ thức lượng (sin/cos/tan)"}, {"id": "geo_similarity", "name": "Hình học: Tam giác đồng dạng"}, {"id": "geo_circle_length_area", "name": "Hình học: Đường tròn (chu vi/diện tích)"}, {"id": "geo_circle_angles", "name": "Hình học: Góc trong đường tròn"}, {"id": "geo_circle_tangent", "name": "Hình học: Tiếp tuyến & dây cung"}, {"id": "geo_coordinate", "name": "Hình học: Tọa độ phẳng"}];
+const DEFAULT_QUESTIONS=[{"id": "qseed_000", "subject": "Toán 9", "skill": "alg_root", "diff": 1, "text": "Rút gọn: √36", "A": "5", "B": "36", "C": "7", "D": "6", "ans": "D", "explain": "√(k²)=|k|, với k=6>0 ⇒ 6.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_001", "subject": "Toán 9", "skill": "alg_root", "diff": 1, "text": "Rút gọn: √49", "A": "49", "B": "6", "C": "8", "D": "7", "ans": "D", "explain": "√(k²)=|k|, với k=7>0 ⇒ 7.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_002", "subject": "Toán 9", "skill": "alg_root", "diff": 1, "text": "Rút gọn: √9", "A": "9", "B": "4", "C": "2", "D": "3", "ans": "D", "explain": "√(k²)=|k|, với k=3>0 ⇒ 3.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_003", "subject": "Toán 9", "skill": "alg_root", "diff": 1, "text": "Rút gọn: √4", "A": "2", "B": "1", "C": "3", "D": "4", "ans": "A", "explain": "√(k²)=|k|, với k=2>0 ⇒ 2.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_004", "subject": "Toán 9", "skill": "alg_root", "diff": 1, "text": "Rút gọn: √5184", "A": "5184", "B": "71", "C": "72", "D": "73", "ans": "C", "explain": "√(k²)=|k|, với k=72>0 ⇒ 72.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_005", "subject": "Toán 9", "skill": "alg_root", "diff": 1, "text": "Rút gọn: √400", "A": "400", "B": "19", "C": "20", "D": "21", "ans": "C", "explain": "√(k²)=|k|, với k=20>0 ⇒ 20.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_006", "subject": "Toán 9", "skill": "alg_root", "diff": 1, "text": "Rút gọn: √400", "A": "21", "B": "400", "C": "19", "D": "20", "ans": "D", "explain": "√(k²)=|k|, với k=20>0 ⇒ 20.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_007", "subject": "Toán 9", "skill": "alg_root", "diff": 2, "text": "Rút gọn: √576", "A": "23", "B": "576", "C": "24", "D": "25", "ans": "C", "explain": "√(k²)=|k|, với k=24>0 ⇒ 24.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_008", "subject": "Toán 9", "skill": "alg_root", "diff": 2, "text": "Rút gọn: √729", "A": "26", "B": "729", "C": "28", "D": "27", "ans": "D", "explain": "√(k²)=|k|, với k=27>0 ⇒ 27.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_009", "subject": "Toán 9", "skill": "alg_root", "diff": 2, "text": "Rút gọn: √576", "A": "23", "B": "24", "C": "25", "D": "576", "ans": "B", "explain": "√(k²)=|k|, với k=24>0 ⇒ 24.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_010", "subject": "Toán 9", "skill": "alg_root", "diff": 2, "text": "Rút gọn: √144", "A": "144", "B": "11", "C": "12", "D": "13", "ans": "C", "explain": "√(k²)=|k|, với k=12>0 ⇒ 12.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_011", "subject": "Toán 9", "skill": "alg_root", "diff": 2, "text": "Rút gọn: √729", "A": "27", "B": "26", "C": "729", "D": "28", "ans": "A", "explain": "√(k²)=|k|, với k=27>0 ⇒ 27.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_012", "subject": "Toán 9", "skill": "alg_root", "diff": 2, "text": "Rút gọn: √576", "A": "24", "B": "23", "C": "25", "D": "576", "ans": "A", "explain": "√(k²)=|k|, với k=24>0 ⇒ 24.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_013", "subject": "Toán 9", "skill": "alg_root", "diff": 2, "text": "Rút gọn: √25", "A": "4", "B": "5", "C": "6", "D": "25", "ans": "B", "explain": "√(k²)=|k|, với k=5>0 ⇒ 5.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_014", "subject": "Toán 9", "skill": "alg_root", "diff": 3, "text": "Rút gọn: √729", "A": "729", "B": "27", "C": "26", "D": "28", "ans": "B", "explain": "√(k²)=|k|, với k=27>0 ⇒ 27.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_015", "subject": "Toán 9", "skill": "alg_root", "diff": 3, "text": "Rút gọn: √9", "A": "4", "B": "2", "C": "3", "D": "9", "ans": "C", "explain": "√(k²)=|k|, với k=3>0 ⇒ 3.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_016", "subject": "Toán 9", "skill": "alg_root", "diff": 3, "text": "Rút gọn: √25", "A": "5", "B": "4", "C": "6", "D": "25", "ans": "A", "explain": "√(k²)=|k|, với k=5>0 ⇒ 5.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_017", "subject": "Toán 9", "skill": "alg_root", "diff": 3, "text": "Rút gọn: √2025", "A": "45", "B": "2025", "C": "46", "D": "44", "ans": "A", "explain": "√(k²)=|k|, với k=45>0 ⇒ 45.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_018", "subject": "Toán 9", "skill": "alg_root", "diff": 3, "text": "Rút gọn: √49", "A": "7", "B": "6", "C": "8", "D": "49", "ans": "A", "explain": "√(k²)=|k|, với k=7>0 ⇒ 7.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_019", "subject": "Toán 9", "skill": "alg_root", "diff": 3, "text": "Rút gọn: √784", "A": "29", "B": "28", "C": "784", "D": "27", "ans": "B", "explain": "√(k²)=|k|, với k=28>0 ⇒ 28.", "hint1": "Nhớ: √(a²)=|a|.", "hint2": "Ở đây k>0 nên |k|=k.", "hint3": "Kết luận."}, {"id": "qseed_020", "subject": "Toán 9", "skill": "alg_poly", "diff": 1, "text": "Khai triển: (4x + 9)² bằng", "A": "16x² + 36x + 81", "B": "4x² + 72x + 81", "C": "16x² + 72x + 81", "D": "16x² - 72x + 81", "ans": "C", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_021", "subject": "Toán 9", "skill": "alg_poly", "diff": 1, "text": "Khai triển: (4x + 3)² bằng", "A": "16x² + 12x + 9", "B": "16x² + 24x + 9", "C": "4x² + 24x + 9", "D": "16x² - 24x + 9", "ans": "B", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_022", "subject": "Toán 9", "skill": "alg_poly", "diff": 1, "text": "Khai triển: (9x + 9)² bằng", "A": "81x² + 81x + 81", "B": "81x² + 162x + 81", "C": "81x² - 162x + 81", "D": "9x² + 162x + 81", "ans": "B", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_023", "subject": "Toán 9", "skill": "alg_poly", "diff": 1, "text": "Khai triển: (3x + 9)² bằng", "A": "9x² + 54x + 81", "B": "9x² + 27x + 81", "C": "9x² - 54x + 81", "D": "3x² + 54x + 81", "ans": "A", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_024", "subject": "Toán 9", "skill": "alg_poly", "diff": 1, "text": "Khai triển: (8x + 3)² bằng", "A": "8x² + 48x + 9", "B": "64x² + 24x + 9", "C": "64x² + 48x + 9", "D": "64x² - 48x + 9", "ans": "C", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_025", "subject": "Toán 9", "skill": "alg_poly", "diff": 1, "text": "Khai triển: (4x + 9)² bằng", "A": "16x² - 72x + 81", "B": "16x² + 36x + 81", "C": "4x² + 72x + 81", "D": "16x² + 72x + 81", "ans": "D", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_026", "subject": "Toán 9", "skill": "alg_poly", "diff": 1, "text": "Khai triển: (5x + 3)² bằng", "A": "25x² + 15x + 9", "B": "25x² - 30x + 9", "C": "25x² + 30x + 9", "D": "5x² + 30x + 9", "ans": "C", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_027", "subject": "Toán 9", "skill": "alg_poly", "diff": 2, "text": "Khai triển: (9x + 1)² bằng", "A": "81x² - 18x + 1", "B": "9x² + 18x + 1", "C": "81x² + 9x + 1", "D": "81x² + 18x + 1", "ans": "D", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_028", "subject": "Toán 9", "skill": "alg_poly", "diff": 2, "text": "Khai triển: (5x + 2)² bằng", "A": "25x² - 20x + 4", "B": "25x² + 10x + 4", "C": "5x² + 20x + 4", "D": "25x² + 20x + 4", "ans": "D", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_029", "subject": "Toán 9", "skill": "alg_poly", "diff": 2, "text": "Khai triển: (4x + 3)² bằng", "A": "16x² + 12x + 9", "B": "16x² + 24x + 9", "C": "4x² + 24x + 9", "D": "16x² - 24x + 9", "ans": "B", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_030", "subject": "Toán 9", "skill": "alg_poly", "diff": 2, "text": "Khai triển: (8x + 4)² bằng", "A": "64x² + 64x + 16", "B": "64x² - 64x + 16", "C": "8x² + 64x + 16", "D": "64x² + 32x + 16", "ans": "A", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_031", "subject": "Toán 9", "skill": "alg_poly", "diff": 2, "text": "Khai triển: (7x + 8)² bằng", "A": "49x² + 56x + 64", "B": "7x² + 112x + 64", "C": "49x² + 112x + 64", "D": "49x² - 112x + 64", "ans": "C", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_032", "subject": "Toán 9", "skill": "alg_poly", "diff": 2, "text": "Khai triển: (7x + 1)² bằng", "A": "49x² - 14x + 1", "B": "49x² + 14x + 1", "C": "7x² + 14x + 1", "D": "49x² + 7x + 1", "ans": "B", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_033", "subject": "Toán 9", "skill": "alg_poly", "diff": 2, "text": "Khai triển: (2x + 4)² bằng", "A": "2x² + 16x + 16", "B": "4x² + 8x + 16", "C": "4x² - 16x + 16", "D": "4x² + 16x + 16", "ans": "D", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_034", "subject": "Toán 9", "skill": "alg_poly", "diff": 3, "text": "Khai triển: (5x + 5)² bằng", "A": "25x² + 25x + 25", "B": "5x² + 50x + 25", "C": "25x² + 50x + 25", "D": "25x² - 50x + 25", "ans": "C", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_035", "subject": "Toán 9", "skill": "alg_poly", "diff": 3, "text": "Khai triển: (9x + 4)² bằng", "A": "9x² + 72x + 16", "B": "81x² + 72x + 16", "C": "81x² + 36x + 16", "D": "81x² - 72x + 16", "ans": "B", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_036", "subject": "Toán 9", "skill": "alg_poly", "diff": 3, "text": "Khai triển: (8x + 6)² bằng", "A": "64x² + 96x + 36", "B": "8x² + 96x + 36", "C": "64x² + 48x + 36", "D": "64x² - 96x + 36", "ans": "A", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_037", "subject": "Toán 9", "skill": "alg_poly", "diff": 3, "text": "Khai triển: (2x + 2)² bằng", "A": "4x² - 8x + 4", "B": "2x² + 8x + 4", "C": "4x² + 4x + 4", "D": "4x² + 8x + 4", "ans": "D", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_038", "subject": "Toán 9", "skill": "alg_poly", "diff": 3, "text": "Khai triển: (3x + 4)² bằng", "A": "3x² + 24x + 16", "B": "9x² - 24x + 16", "C": "9x² + 24x + 16", "D": "9x² + 12x + 16", "ans": "C", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_039", "subject": "Toán 9", "skill": "alg_poly", "diff": 3, "text": "Khai triển: (4x + 5)² bằng", "A": "16x² + 20x + 25", "B": "4x² + 40x + 25", "C": "16x² + 40x + 25", "D": "16x² - 40x + 25", "ans": "C", "explain": "(ax+b)² = a²x² + 2abx + b².", "hint1": "Dùng hằng đẳng thức (u+v)².", "hint2": "u=ax, v=b.", "hint3": "Tính 2uv."}, {"id": "qseed_040", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 1, "text": "Giải phương trình: 3x + (24) = 0", "A": "-7", "B": "-9", "C": "-6", "D": "-8", "ans": "D", "explain": "3x = -24 ⇒ x = -24/3 = -8.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia cả hai vế cho hệ số của x.", "hint3": "Kiểm tra lại bằng thế vào phương trình."}, {"id": "qseed_041", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 1, "text": "Giải phương trình: 9x + (-54) = 0", "A": "5", "B": "6", "C": "8", "D": "7", "ans": "B", "explain": "9x = 54 ⇒ x = 54/9 = 6.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia cả hai vế cho hệ số của x.", "hint3": "Kiểm tra lại bằng thế vào phương trình."}, {"id": "qseed_042", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 1, "text": "Giải phương trình: 2x + (-6) = 0", "A": "3", "B": "5", "C": "4", "D": "2", "ans": "A", "explain": "2x = 6 ⇒ x = 6/2 = 3.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia cả hai vế cho hệ số của x.", "hint3": "Kiểm tra lại bằng thế vào phương trình."}, {"id": "qseed_043", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 1, "text": "Giải phương trình: 9x + (45) = 0", "A": "-6", "B": "-5", "C": "-3", "D": "-4", "ans": "B", "explain": "9x = -45 ⇒ x = -45/9 = -5.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia cả hai vế cho hệ số của x.", "hint3": "Kiểm tra lại bằng thế vào phương trình."}, {"id": "qseed_044", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 1, "text": "Giải phương trình: 2x + (-2) = 0", "A": "0", "B": "2", "C": "3", "D": "1", "ans": "D", "explain": "2x = 2 ⇒ x = 2/2 = 1.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia cả hai vế cho hệ số của x.", "hint3": "Kiểm tra lại bằng thế vào phương trình."}, {"id": "qseed_045", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 1, "text": "Giải phương trình: 4x + (32) = 0", "A": "-7", "B": "-9", "C": "-6", "D": "-8", "ans": "D", "explain": "4x = -32 ⇒ x = -32/4 = -8.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia cả hai vế cho hệ số của x.", "hint3": "Kiểm tra lại bằng thế vào phương trình."}, {"id": "qseed_046", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 1, "text": "Giải phương trình: 5x + (-15) = 0", "A": "4", "B": "5", "C": "2", "D": "3", "ans": "D", "explain": "5x = 15 ⇒ x = 15/5 = 3.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia cả hai vế cho hệ số của x.", "hint3": "Kiểm tra lại bằng thế vào phương trình."}, {"id": "qseed_047", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 2, "text": "Giải phương trình: 2x + 9 = -1", "A": "-5", "B": "-4", "C": "-6", "D": "5", "ans": "A", "explain": "2x = -1-9 = -10 ⇒ x = -5.", "hint1": "Đưa {b} sang vế phải: {a}x = {c}-{b}.", "hint2": "Tính vế phải.", "hint3": "Chia cho {a}."}, {"id": "qseed_048", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 2, "text": "Giải phương trình: 5x + 0 = -15", "A": "3", "B": "-3", "C": "-2", "D": "-4", "ans": "B", "explain": "5x = -15-0 = -15 ⇒ x = -3.", "hint1": "Đưa {b} sang vế phải: {a}x = {c}-{b}.", "hint2": "Tính vế phải.", "hint3": "Chia cho {a}."}, {"id": "qseed_049", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 2, "text": "Giải phương trình: 6x + 4 = -2", "A": "-2", "B": "0", "C": "1", "D": "-1", "ans": "D", "explain": "6x = -2-4 = -6 ⇒ x = -1.", "hint1": "Đưa {b} sang vế phải: {a}x = {c}-{b}.", "hint2": "Tính vế phải.", "hint3": "Chia cho {a}."}, {"id": "qseed_050", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 2, "text": "Giải phương trình: 3x + -8 = -2", "A": "2", "B": "-2", "C": "1", "D": "3", "ans": "A", "explain": "3x = -2--8 = 6 ⇒ x = 2.", "hint1": "Đưa {b} sang vế phải: {a}x = {c}-{b}.", "hint2": "Tính vế phải.", "hint3": "Chia cho {a}."}, {"id": "qseed_051", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 2, "text": "Giải phương trình: 7x + -8 = -29", "A": "3", "B": "-3", "C": "-2", "D": "-4", "ans": "B", "explain": "7x = -29--8 = -21 ⇒ x = -3.", "hint1": "Đưa {b} sang vế phải: {a}x = {c}-{b}.", "hint2": "Tính vế phải.", "hint3": "Chia cho {a}."}, {"id": "qseed_052", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 2, "text": "Giải phương trình: 6x + 9 = 45", "A": "-6", "B": "7", "C": "5", "D": "6", "ans": "D", "explain": "6x = 45-9 = 36 ⇒ x = 6.", "hint1": "Đưa {b} sang vế phải: {a}x = {c}-{b}.", "hint2": "Tính vế phải.", "hint3": "Chia cho {a}."}, {"id": "qseed_053", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 2, "text": "Giải phương trình: 3x + -6 = -12", "A": "-1", "B": "-3", "C": "2", "D": "-2", "ans": "D", "explain": "3x = -12--6 = -6 ⇒ x = -2.", "hint1": "Đưa {b} sang vế phải: {a}x = {c}-{b}.", "hint2": "Tính vế phải.", "hint3": "Chia cho {a}."}, {"id": "qseed_054", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 3, "text": "Giải phương trình: 6(x + -2) = 3x + -12", "A": "0", "B": "1", "C": "-1", "D": "-1", "ans": "A", "explain": "Khai triển: 6x + -12 = 3x + -12 ⇒ 3x = 0 ⇒ x = 0.", "hint1": "Khai triển vế trái: a(x+b)=ax+ab.", "hint2": "Chuyển các hạng tử chứa x về một vế.", "hint3": "Chia cho hệ số của x."}, {"id": "qseed_055", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 3, "text": "Giải phương trình: 2(x + 5) = 2x + 10", "A": "6", "B": "-6", "C": "5", "D": "4", "ans": "C", "explain": "Khai triển: 2x + 10 = 2x + 10 ⇒ 0x = 0 ⇒ x = 5.", "hint1": "Khai triển vế trái: a(x+b)=ax+ab.", "hint2": "Chuyển các hạng tử chứa x về một vế.", "hint3": "Chia cho hệ số của x."}, {"id": "qseed_056", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 3, "text": "Giải phương trình: 3(x + 6) = 4x + 21", "A": "-2", "B": "-3", "C": "-4", "D": "2", "ans": "B", "explain": "Khai triển: 3x + 18 = 4x + 21 ⇒ -1x = 3 ⇒ x = -3.", "hint1": "Khai triển vế trái: a(x+b)=ax+ab.", "hint2": "Chuyển các hạng tử chứa x về một vế.", "hint3": "Chia cho hệ số của x."}, {"id": "qseed_057", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 3, "text": "Giải phương trình: 3(x + 3) = 6x + 24", "A": "-6", "B": "-5", "C": "4", "D": "-4", "ans": "B", "explain": "Khai triển: 3x + 9 = 6x + 24 ⇒ -3x = 15 ⇒ x = -5.", "hint1": "Khai triển vế trái: a(x+b)=ax+ab.", "hint2": "Chuyển các hạng tử chứa x về một vế.", "hint3": "Chia cho hệ số của x."}, {"id": "qseed_058", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 3, "text": "Giải phương trình: 4(x + -2) = 2x + -8", "A": "-1", "B": "0", "C": "-1", "D": "1", "ans": "B", "explain": "Khai triển: 4x + -8 = 2x + -8 ⇒ 2x = 0 ⇒ x = 0.", "hint1": "Khai triển vế trái: a(x+b)=ax+ab.", "hint2": "Chuyển các hạng tử chứa x về một vế.", "hint3": "Chia cho hệ số của x."}, {"id": "qseed_059", "subject": "Toán 9", "skill": "alg_linear_eq", "diff": 3, "text": "Giải phương trình: 6(x + -4) = 5x + -20", "A": "-5", "B": "3", "C": "4", "D": "5", "ans": "C", "explain": "Khai triển: 6x + -24 = 5x + -20 ⇒ 1x = 4 ⇒ x = 4.", "hint1": "Khai triển vế trái: a(x+b)=ax+ab.", "hint2": "Chuyển các hạng tử chứa x về một vế.", "hint3": "Chia cho hệ số của x."}, {"id": "qseed_060", "subject": "Toán 9", "skill": "alg_inequality", "diff": 1, "text": "Giải bất phương trình: 2x + 0 < -6", "A": "x > -3", "B": "x < -3", "C": "x ≤ -3", "D": "x ≥ -3", "ans": "B", "explain": "2x < -6-0 = -6 ⇒ x < -3.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia hai vế cho số dương thì chiều không đổi.", "hint3": "Viết tập nghiệm theo dạng bất đẳng thức."}, {"id": "qseed_061", "subject": "Toán 9", "skill": "alg_inequality", "diff": 1, "text": "Giải bất phương trình: 3x + -9 < -6", "A": "x > 1", "B": "x ≤ 1", "C": "x < 1", "D": "x ≥ 1", "ans": "C", "explain": "3x < -6--9 = 3 ⇒ x < 1.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia hai vế cho số dương thì chiều không đổi.", "hint3": "Viết tập nghiệm theo dạng bất đẳng thức."}, {"id": "qseed_062", "subject": "Toán 9", "skill": "alg_inequality", "diff": 1, "text": "Giải bất phương trình: 9x + -1 < -1", "A": "x ≥ 0", "B": "x ≤ 0", "C": "x < 0", "D": "x > 0", "ans": "C", "explain": "9x < -1--1 = 0 ⇒ x < 0.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia hai vế cho số dương thì chiều không đổi.", "hint3": "Viết tập nghiệm theo dạng bất đẳng thức."}, {"id": "qseed_063", "subject": "Toán 9", "skill": "alg_inequality", "diff": 1, "text": "Giải bất phương trình: 8x + -2 < -2", "A": "x ≥ 0", "B": "x ≤ 0", "C": "x > 0", "D": "x < 0", "ans": "D", "explain": "8x < -2--2 = 0 ⇒ x < 0.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia hai vế cho số dương thì chiều không đổi.", "hint3": "Viết tập nghiệm theo dạng bất đẳng thức."}, {"id": "qseed_064", "subject": "Toán 9", "skill": "alg_inequality", "diff": 1, "text": "Giải bất phương trình: 8x + 7 < 47", "A": "x > 5", "B": "x ≥ 5", "C": "x < 5", "D": "x ≤ 5", "ans": "C", "explain": "8x < 47-7 = 40 ⇒ x < 5.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia hai vế cho số dương thì chiều không đổi.", "hint3": "Viết tập nghiệm theo dạng bất đẳng thức."}, {"id": "qseed_065", "subject": "Toán 9", "skill": "alg_inequality", "diff": 1, "text": "Giải bất phương trình: 6x + 8 < -10", "A": "x > -3", "B": "x ≥ -3", "C": "x < -3", "D": "x ≤ -3", "ans": "C", "explain": "6x < -10-8 = -18 ⇒ x < -3.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia hai vế cho số dương thì chiều không đổi.", "hint3": "Viết tập nghiệm theo dạng bất đẳng thức."}, {"id": "qseed_066", "subject": "Toán 9", "skill": "alg_inequality", "diff": 1, "text": "Giải bất phương trình: 7x + 0 < 42", "A": "x > 6", "B": "x < 6", "C": "x ≤ 6", "D": "x ≥ 6", "ans": "B", "explain": "7x < 42-0 = 42 ⇒ x < 6.", "hint1": "Chuyển hằng số sang vế phải.", "hint2": "Chia hai vế cho số dương thì chiều không đổi.", "hint3": "Viết tập nghiệm theo dạng bất đẳng thức."}, {"id": "qseed_067", "subject": "Toán 9", "skill": "alg_inequality", "diff": 2, "text": "Giải bất phương trình: 5x - -1 ≥ -31", "A": "x ≤ -6", "B": "x > -6", "C": "x ≥ -6", "D": "x < -6", "ans": "C", "explain": "5x ≥ -31+-1 = -30 ⇒ x ≥ -6.", "hint1": "Đưa -b sang vế phải: ax ≥ c + b.", "hint2": "Tính c + b.", "hint3": "Chia hai vế cho a > 0."}, {"id": "qseed_068", "subject": "Toán 9", "skill": "alg_inequality", "diff": 2, "text": "Giải bất phương trình: 3x - 1 ≥ 10", "A": "x ≤ 3", "B": "x ≥ 3", "C": "x < 3", "D": "x > 3", "ans": "B", "explain": "3x ≥ 10+1 = 9 ⇒ x ≥ 3.", "hint1": "Đưa -b sang vế phải: ax ≥ c + b.", "hint2": "Tính c + b.", "hint3": "Chia hai vế cho a > 0."}, {"id": "qseed_069", "subject": "Toán 9", "skill": "alg_inequality", "diff": 2, "text": "Giải bất phương trình: 6x - 7 ≥ -5", "A": "x ≥ -2", "B": "x > -2", "C": "x ≤ -2", "D": "x < -2", "ans": "A", "explain": "6x ≥ -5+7 = -12 ⇒ x ≥ -2.", "hint1": "Đưa -b sang vế phải: ax ≥ c + b.", "hint2": "Tính c + b.", "hint3": "Chia hai vế cho a > 0."}, {"id": "qseed_070", "subject": "Toán 9", "skill": "alg_inequality", "diff": 2, "text": "Giải bất phương trình: 4x - -3 ≥ -3", "A": "x ≤ 0", "B": "x ≥ 0", "C": "x > 0", "D": "x < 0", "ans": "B", "explain": "4x ≥ -3+-3 = 0 ⇒ x ≥ 0.", "hint1": "Đưa -b sang vế phải: ax ≥ c + b.", "hint2": "Tính c + b.", "hint3": "Chia hai vế cho a > 0."}, {"id": "qseed_071", "subject": "Toán 9", "skill": "alg_inequality", "diff": 2, "text": "Giải bất phương trình: 6x - 3 ≥ 15", "A": "x < 2", "B": "x > 2", "C": "x ≤ 2", "D": "x ≥ 2", "ans": "D", "explain": "6x ≥ 15+3 = 12 ⇒ x ≥ 2.", "hint1": "Đưa -b sang vế phải: ax ≥ c + b.", "hint2": "Tính c + b.", "hint3": "Chia hai vế cho a > 0."}, {"id": "qseed_072", "subject": "Toán 9", "skill": "alg_inequality", "diff": 2, "text": "Giải bất phương trình: 7x - 5 ≥ 12", "A": "x ≤ 1", "B": "x ≥ 1", "C": "x > 1", "D": "x < 1", "ans": "B", "explain": "7x ≥ 12+5 = 7 ⇒ x ≥ 1.", "hint1": "Đưa -b sang vế phải: ax ≥ c + b.", "hint2": "Tính c + b.", "hint3": "Chia hai vế cho a > 0."}, {"id": "qseed_073", "subject": "Toán 9", "skill": "alg_inequality", "diff": 2, "text": "Giải bất phương trình: 4x - -7 ≥ -15", "A": "x ≤ -2", "B": "x < -2", "C": "x ≥ -2", "D": "x > -2", "ans": "C", "explain": "4x ≥ -15+-7 = -8 ⇒ x ≥ -2.", "hint1": "Đưa -b sang vế phải: ax ≥ c + b.", "hint2": "Tính c + b.", "hint3": "Chia hai vế cho a > 0."}, {"id": "qseed_074", "subject": "Toán 9", "skill": "alg_inequality", "diff": 3, "text": "Giải bất phương trình: -3x + -5 > -2", "A": "x > -1", "B": "x ≤ -1", "C": "x ≥ -1", "D": "x < -1", "ans": "D", "explain": "-3x > -2--5 = 3. Chia cho -3 (<0) nên đổi chiều ⇒ x < -1.", "hint1": "Chuyển b sang vế phải: ax > c-b.", "hint2": "Nhận xét a < 0 nên khi chia phải đổi chiều.", "hint3": "Kết luận nghiệm dạng x < ..."}, {"id": "qseed_075", "subject": "Toán 9", "skill": "alg_inequality", "diff": 3, "text": "Giải bất phương trình: -6x + 5 > 23", "A": "x > -3", "B": "x < -3", "C": "x ≤ -3", "D": "x ≥ -3", "ans": "B", "explain": "-6x > 23-5 = 18. Chia cho -6 (<0) nên đổi chiều ⇒ x < -3.", "hint1": "Chuyển b sang vế phải: ax > c-b.", "hint2": "Nhận xét a < 0 nên khi chia phải đổi chiều.", "hint3": "Kết luận nghiệm dạng x < ..."}, {"id": "qseed_076", "subject": "Toán 9", "skill": "alg_inequality", "diff": 3, "text": "Giải bất phương trình: -5x + 3 > -12", "A": "x ≥ 3", "B": "x ≤ 3", "C": "x < 3", "D": "x > 3", "ans": "C", "explain": "-5x > -12-3 = -15. Chia cho -5 (<0) nên đổi chiều ⇒ x < 3.", "hint1": "Chuyển b sang vế phải: ax > c-b.", "hint2": "Nhận xét a < 0 nên khi chia phải đổi chiều.", "hint3": "Kết luận nghiệm dạng x < ..."}, {"id": "qseed_077", "subject": "Toán 9", "skill": "alg_inequality", "diff": 3, "text": "Giải bất phương trình: -2x + -2 > -6", "A": "x < 2", "B": "x ≥ 2", "C": "x ≤ 2", "D": "x > 2", "ans": "A", "explain": "-2x > -6--2 = -4. Chia cho -2 (<0) nên đổi chiều ⇒ x < 2.", "hint1": "Chuyển b sang vế phải: ax > c-b.", "hint2": "Nhận xét a < 0 nên khi chia phải đổi chiều.", "hint3": "Kết luận nghiệm dạng x < ..."}, {"id": "qseed_078", "subject": "Toán 9", "skill": "alg_inequality", "diff": 3, "text": "Giải bất phương trình: -3x + 5 > 14", "A": "x < -3", "B": "x ≤ -3", "C": "x ≥ -3", "D": "x > -3", "ans": "A", "explain": "-3x > 14-5 = 9. Chia cho -3 (<0) nên đổi chiều ⇒ x < -3.", "hint1": "Chuyển b sang vế phải: ax > c-b.", "hint2": "Nhận xét a < 0 nên khi chia phải đổi chiều.", "hint3": "Kết luận nghiệm dạng x < ..."}, {"id": "qseed_079", "subject": "Toán 9", "skill": "alg_inequality", "diff": 3, "text": "Giải bất phương trình: -5x + 7 > -18", "A": "x < 5", "B": "x > 5", "C": "x ≤ 5", "D": "x ≥ 5", "ans": "A", "explain": "-5x > -18-7 = -25. Chia cho -5 (<0) nên đổi chiều ⇒ x < 5.", "hint1": "Chuyển b sang vế phải: ax > c-b.", "hint2": "Nhận xét a < 0 nên khi chia phải đổi chiều.", "hint3": "Kết luận nghiệm dạng x < ..."}];
+
+function $(id){return document.getElementById(id);}
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast._tm);toast._tm=setTimeout(()=>t.classList.remove("show"),2400);}
+
+function clampInt(n, lo, hi){n=Number(n); if(!Number.isFinite(n)) n=lo; n=Math.round(n); return Math.max(lo, Math.min(hi, n));}
+function ensureSettings(){
+  DB.meta = DB.meta || {};
+  DB.meta.settings = DB.meta.settings || {};
+  if(DB.meta.settings.perDayDefault==null) DB.meta.settings.perDayDefault = 5;
+}
+function getPerDayForStudent(stu){
+  const g = (DB.meta && DB.meta.settings && DB.meta.settings.perDayDefault!=null) ? DB.meta.settings.perDayDefault : 5;
+  const s = (stu && stu.settings && stu.settings.perDay!=null) ? stu.settings.perDay : null;
+  return clampInt(s ?? g, 3, 15);
+}
+function setPerDayForStudent(stu, n){
+  stu.settings = stu.settings || {};
+  stu.settings.perDay = clampInt(n, 3, 15);
+}
+
+function fmtDate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),da=String(d.getDate()).padStart(2,"0");return y+"-"+m+"-"+da;}
+let testDayOffset=Number(localStorage.getItem(TEST_DAY_OFFSET_KEY)||"0");
+function nowDate(){const d=new Date();d.setDate(d.getDate()+testDayOffset);return d;}
+function todayKey(){return fmtDate(nowDate());}
+function setTestOffset(n){testDayOffset=Number(n)||0;localStorage.setItem(TEST_DAY_OFFSET_KEY,String(testDayOffset));toast("Test offset: "+(testDayOffset>=0?"+":"")+testDayOffset+" ngày");refreshAll();}
+function nextTestDay(){setTestOffset(testDayOffset+1);} function resetTestOffset(){setTestOffset(0);}
+
+function loadDB(){try{const raw=localStorage.getItem(LS_KEY);if(!raw) return null;return JSON.parse(raw);}catch(e){return null;}}
+function saveDB(db){localStorage.setItem(LS_KEY, JSON.stringify(db)); refreshKPIs();}
+function newDB(){return {meta:{school:"Trường PTDTBT THCS Mường Đun",version:"3.0-submission",settings:{perDayDefault:5}},users:{teacher:{"gv01":{id:"gv01",name:"GV Demo",pw:(String(r.pw||"").trim()||"123456")}},student:{},parent:{}},skills:DEFAULT_SKILLS,questions:DEFAULT_QUESTIONS};}
+let DB=loadDB()||newDB(); ensureSettings(); saveDB(DB);
+
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
+let currentTeacher=null,currentStudentId=null,currentParentId=null,teacherSelected=null,parentChildId=null,session=null;
+function SKILL_NAME(){const o={};(DB.skills||[]).forEach(s=>o[s.id]=s.name);return o;}
+function ensureSkillId(id){return (DB.skills||[]).some(s=>s.id===id);}
+
+const KEYWORD_TO_SKILLS=[
+ {k:["căn","rút gọn căn","căn bậc"],ids:["alg_root"]},{k:["hằng đẳng","đa thức","khai triển"],ids:["alg_poly"]},
+ {k:["phương trình bậc nhất","bậc nhất"],ids:["alg_linear_eq"]},{k:["bất phương trình","bpt"],ids:["alg_inequality"]},
+ {k:["hệ phương trình","hệ pt","2 ẩn"],ids:["alg_system"]},{k:["phương trình bậc hai","bậc hai","delta"],ids:["alg_quadratic"]},
+ {k:["hàm số bậc nhất","đồ thị","y=ax+b"],ids:["alg_function_linear"]},{k:["thống kê","trung bình","trung vị","mốt"],ids:["alg_statistics"]},
+ {k:["pitago","pythag","tam giác vuông"],ids:["geo_pythag"]},{k:["sin","cos","tan","hệ thức lượng"],ids:["geo_trig"]},
+ {k:["đồng dạng","tỉ số đồng dạng"],ids:["geo_similarity"]},{k:["chu vi","diện tích hình tròn"],ids:["geo_circle_length_area"]},
+ {k:["góc nội tiếp","góc ở tâm","tứ giác nội tiếp"],ids:["geo_circle_angles"]},{k:["tiếp tuyến","dây cung","lực của điểm"],ids:["geo_circle_tangent"]},
+ {k:["tọa độ","trung điểm","khoảng cách"],ids:["geo_coordinate"]}
+];
+function parseRequirement(text){const t=(text||"").toLowerCase();const found=new Set(); for(const r of KEYWORD_TO_SKILLS){if(r.k.some(w=>t.includes(w))) r.ids.forEach(id=>found.add(id));} return [...found].filter(ensureSkillId);}
+function getWeakSkills(stu,topN=2){const m=stu.mastery||{};const arr=(DB.skills||[]).map(s=>({id:s.id,val:(m[s.id]??0)}));arr.sort((a,b)=>a.val-b.val);return arr.slice(0,topN).map(x=>x.id);}
+function fastThresholdMs(diff){return diff<=1?1500:diff==2?2200:3000;}
+function pickQuestionsForToday(stu, reqText, count){
+  const reqSkills=new Set(parseRequirement(reqText));
+  const weak=getWeakSkills(stu,2); weak.forEach(s=>reqSkills.add(s));
+  let targets=[...reqSkills].filter(ensureSkillId); if(targets.length===0) targets=[weak[0] || (DB.skills[0]||{}).id].filter(Boolean);
+  const m=stu.mastery||{}; const avg=targets.reduce((s,id)=>s+(m[id]??0),0)/targets.length;
+  let baseDiff=1; if(avg>18) baseDiff=3; else if(avg>8) baseDiff=2;
+  const pool=(DB.questions||[]).filter(q=>String(q.subject||"").toLowerCase().includes("toán") && targets.includes(q.skill));
+  const scored=pool.map(q=>{const d=Number(q.diff||1); const diffScore=1.0-Math.min(2,Math.abs(d-baseDiff))*0.35; const mastery=m[q.skill]??0; const weakBoost=1.0+Math.max(0,10-mastery)*0.05; return {q,s:diffScore*weakBoost*(0.9+Math.random()*0.2)};}).sort((a,b)=>b.s-a.s);
+  count = clampInt(count ?? 3, 1, 20);
+  const chosen=[];
+  const used=new Set();
+  for(const it of scored){
+    if(chosen.length>=count) break;
+    if(it && it.q && !used.has(it.q.id)){ chosen.push(it.q); used.add(it.q.id); }
+  }
+  while(chosen.length<count && pool.length){
+    const q = pool[Math.floor(Math.random()*pool.length)];
+    if(q && !used.has(q.id)){ chosen.push(q); used.add(q.id); }
+    else break;
+  }
+  const tasks=chosen;
+  const explain='AI chọn theo: yêu cầu="'+((reqText||"").trim()||"không")+'"; lỗ hổng='+weak.map(w=>SKILL_NAME()[w]||w).join(", ")+'; độ khó gợi ý='+baseDiff+'.';
+  return {tasks, explain};
+}
+function pickGateQuestion(skillId, avoidSet){const cand=(DB.questions||[]).filter(q=>q.skill===skillId && Number(q.diff||1)===1 && !avoidSet.has(q.id)); if(!cand.length) return null; return cand[Math.floor(Math.random()*cand.length)];}
+function applyAnswerEffects(q,isCorrect,hintLevel,elapsedMs,isGate){
+  const diff=Number(q.diff||1); const base=diff===1?6:diff===2?9:12;
+  const speedPenalty=Math.max(0,(fastThresholdMs(diff)-elapsedMs)/fastThresholdMs(diff));
+  let delta=0; if(isCorrect) delta=base-hintLevel*2; else delta=-Math.max(3,base*0.55)-(speedPenalty>0.15?2:0);
+  if(isGate) delta=Math.max(2,Math.round(base*0.5))-hintLevel;
+  const gain=isCorrect?(diff===1?1.2:diff===2?1.6:2.0):-(diff===1?0.8:diff===2?1.1:1.4);
+  const masteryDelta=isCorrect?(gain-hintLevel*0.4):gain;
+  return {delta:Math.round(delta*10)/10, masteryDelta};
+}
+function dateDiffDays(aStr,bStr){const a=new Date(aStr+"T00:00:00");const b=new Date(bStr+"T00:00:00");return Math.round((b-a)/(1000*60*60*24));}
+function updateStreak(stu,dayStr){const st=stu.streak||{current:0,best:0,lastDay:null}; if(!st.lastDay){st.current=1;st.best=Math.max(st.best,1);st.lastDay=dayStr;} else {const d=dateDiffDays(st.lastDay,dayStr); if(d===1){st.current++;st.best=Math.max(st.best,st.current);st.lastDay=dayStr;} else if(d>1){st.current=1;st.best=Math.max(st.best,1);st.lastDay=dayStr;}} stu.streak=st;}
+function energyFromStreak(s){return Math.min(100,10+(s||0)*5);}
+
+function parseCSV(text){
+  const rows=[]; let i=0, field="", row=[], inQ=false;
+  const pushField=()=>{row.push(field);field="";}; const pushRow=()=>{rows.push(row);row=[];};
+  while(i<text.length){const c=text[i];
+    if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;} else inQ=false;} else field+=c;}
+    else{if(c==='"') inQ=true; else if(c===',') pushField(); else if(c==='\n'){pushField();pushRow();} else if(c==='\r'){} else field+=c;}
+    i++;
+  }
+  if(field.length||row.length){pushField();pushRow();}
+  return rows.filter(r=>r.some(x=>String(x).trim()!==""));
+}
+function rowsToObjects(rows){if(rows.length<2) return []; const header=rows[0].map(h=>String(h).trim()); const out=[]; for(let i=1;i<rows.length;i++){const obj={}; for(let j=0;j<header.length;j++) obj[header[j]]=rows[i][j]??""; out.push(obj);} return out;}
+function downloadText(filename,text){const blob=new Blob([text],{type:"text/plain;charset=utf-8"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url;a.download=filename; document.body.appendChild(a);a.click();a.remove(); URL.revokeObjectURL(url);}
+
+function importStudentsCSV(objs){let add=0,upd=0;
+  for(const r of objs){const id=String(r.id||"").trim(); const name=String(r.name||"").trim(); if(!id||!name) continue; const cls=String(r.class||r.lop||"").trim();
+    if(!DB.users.student[id]){DB.users.student[id]={id,name,class:cls,pw:"123456",score:0,mastery:{},streak:{current:0,best:0,lastDay:null},history:[],settings:{perDay:DB.meta.settings.perDayDefault ?? 5}}; add++;}
+    else{DB.users.student[id].name=name; if(cls) DB.users.student[id].class=cls; upd++;}
+  }
+  saveDB(DB); toast("Import HS: +"+add+" (cập nhật "+upd+")"); renderTeacher();
+}
+function importQuestionsCSV(objs){let add=0,skip=0;
+  for(const r of objs){
+    const skill=String(r.skill||"").trim(); const diff=Number(r.diff||1);
+    const text=String(r.text||"").trim(); const A=String(r.A||"").trim(); const B=String(r.B||"").trim(); const C=String(r.C||"").trim(); const D=String(r.D||"").trim();
+    const ans=String(r.ans||"").trim().toUpperCase();
+    if(!text||!A||!B||!C||!D||!"ABCD".includes(ans)||!ensureSkillId(skill)||!(diff>=1&&diff<=3)){skip++; continue;}
+    const id="q_"+Math.random().toString(36).slice(2,10);
+    DB.questions.push({id,subject:String(r.subject||"Toán 9"),skill,diff,text,A,B,C,D,ans,explain:String(r.explain||""),hint1:String(r.hint1||""),hint2:String(r.hint2||""),hint3:String(r.hint3||"")});
+    add++;
+  }
+  saveDB(DB); toast("Import câu hỏi: +"+add+" (bỏ qua "+skip+")"); renderTeacher();
+}
+function exportDB(){downloadText("mdun_streak_ai_db.json", JSON.stringify(DB,null,2));}
+
+function lastNDays(n){const base=nowDate(); const out=[]; for(let i=n-1;i>=0;i--){const d=new Date(base); d.setDate(base.getDate()-i); out.push(fmtDate(d));} return out;}
+function calcWeekly(stu){
+  const days=lastNDays(7); const map=new Map((stu.history||[]).map(h=>[h.day,h]));
+  let totalDelta=0,totalCorrect=0,totalHints=0,totalGate=0,daysDone=0; const skillAgg={};
+  for(const day of days){const h=map.get(day); if(!h) continue; daysDone++; totalDelta+=Number(h.scoreDelta||0); totalCorrect+=Number(h.correctCount||0); totalHints+=Number(h.hintsUsed||0); totalGate+=(h.gateTasks||[]).length;
+    const all=[...(h.tasks||[]),...(h.gateTasks||[])];
+    for(const a of all){const sid=a.skill; if(!skillAgg[sid]) skillAgg[sid]={attempt:0,correct:0}; skillAgg[sid].attempt++; if(a.correct) skillAgg[sid].correct++;}
+  }
+  const acc=Object.entries(skillAgg).map(([sid,v])=>({sid,acc:v.correct/Math.max(1,v.attempt)})).sort((a,b)=>a.acc-b.acc);
+  return {days,daysDone,totalDelta,totalCorrect,totalHints,totalGate,weakWeek:acc.slice(0,3).map(x=>x.sid)};
+}
+function renderReportCard(stu){
+  const wk=calcWeekly(stu); const map=new Map((stu.history||[]).map(h=>[h.day,h])); const sn=SKILL_NAME();
+  const rows=wk.days.map(day=>{const h=map.get(day);
+    return "<tr><td>"+day+"</td><td>"+(h?"✅":"—")+"</td><td class='right'>"+(h?(h.correctCount||0):0)+"</td><td class='right'>"+(h?(h.hintsUsed||0):0)+"</td><td class='right'>"+(h?(h.gateTasks||[]).length:0)+"</td><td class='right'>"+(h?(h.scoreDelta||0):0)+"</td></tr>";
+  }).join("");
+  const weakList=wk.weakWeek.length?wk.weakWeek.map(sid=>"<li>"+escapeHTML(sn[sid]||sid)+"</li>").join(""):"<li>Chưa đủ dữ liệu</li>";
+  const comment=document.getElementById("teacherComment")?document.getElementById("teacherComment").value.trim():"";
+  const note=comment?("Nhận xét GV: <b>"+escapeHTML(comment)+"</b>"):"Gợi ý: thêm nhận xét ngắn.";
+  return "<div class='qbox' id='reportPrintable'><div class='row' style='justify-content:space-between;align-items:flex-start'><div><div class='title' style='font-size:16px'>Báo cáo 7 ngày — "+escapeHTML(stu.name)+" "+(stu.class?("("+escapeHTML(stu.class)+")"):"")+"</div><div class='small muted'>Trường: <b>"+escapeHTML(DB.meta.school||"")+"</b> · Ngày hệ thống: <b>"+todayKey()+"</b> (offset "+testDayOffset+")</div></div><div class='pill'>🔥 Streak: "+(stu.streak?.current||0)+" · Best: "+(stu.streak?.best||0)+"</div></div>"
+    +"<div class='hr'></div><table><thead><tr><th>Ngày</th><th>Làm?</th><th class='right'>Đúng</th><th class='right'>Hint</th><th class='right'>Gate</th><th class='right'>Điểm</th></tr></thead><tbody>"+rows+"</tbody></table>"
+    +"<div class='hr'></div><div class='row'><span class='pill'>Hoàn thành: <b>"+wk.daysDone+"/7</b></span><span class='pill'>Tổng đúng: <b>"+wk.totalCorrect+"</b></span><span class='pill'>Hint: <b>"+wk.totalHints+"</b></span><span class='pill'>Gate: <b>"+wk.totalGate+"</b></span><span class='pill'>Điểm tuần: <b>"+(Math.round(wk.totalDelta*10)/10)+"</b></span></div>"
+    +"<div class='hr'></div><div class='split'><div><div class='small muted'><b>Chủ đề cần củng cố:</b></div><ul class='small'>"+weakList+"</ul></div><div><div class='small muted'><b>Nhận xét / kiến nghị:</b></div><div class='help'>"+note+"</div><div class='help' style='margin-top:8px'>Kế hoạch tuần sau: luyện 2 chủ đề yếu + duy trì streak 7/7.</div></div></div>"
+    +"<div class='hr'></div><div class='help'><b>Ghi chú AI:</b> chọn câu theo yêu cầu + lỗ hổng + độ khó; chống đoán mò bằng Gate.</div></div>";
+}
+
+function renderHistoryCard(stu){
+  const sn=SKILL_NAME();
+  const hist=(stu.history||[]).slice().sort((a,b)=>String(b.day||"").localeCompare(String(a.day||"")));
+  if(!hist.length){
+    return "<div class='notice'><div class='title'>Kết quả chi tiết</div><div class='help'>Học sinh chưa có dữ liệu làm bài.</div></div>";
+  }
+  const qMap=new Map((DB.questions||[]).map(q=>[q.id,q]));
+  const blocks=hist.map(h=>{
+    const tasks=(h.tasks||[]);
+    const gates=(h.gateTasks||h.gateAnswers||[]);
+    const all=[...tasks,...gates];
+    const skillTags=((h.req&&h.req.parsedSkills)||[]).map(sid=>"<span class='pill'>"+escapeHTML(sn[sid]||sid)+"</span>").join(" ");
+    const detailRows=all.map(a=>{
+      const q=qMap.get(a.qid)||{};
+      const ok=a.correct?"✅":"❌";
+      const gate=a.gate?"<span class='pill'>Gate</span>":"";
+      const skill=escapeHTML(sn[a.skill]||a.skill||"");
+      const text=escapeHTML(q.text||("["+String(a.qid||"")+"]"));
+      const t=((a.elapsedMs||0)/1000);
+      const delta=(a.delta||0);
+      const ansInfo=(!a.correct && q.ans)?(" <span class='pill'>Đáp án: <b>"+escapeHTML(q.ans)+"</b></span>"):"";
+      return "<tr><td class='right'>"+ok+"</td><td>"+gate+"</td><td>"+skill+"</td><td>"+text+ansInfo+"</td><td class='right'>"+t.toFixed(1)+"s</td><td class='right'>"+delta+"</td></tr>";
+    }).join("") || "<tr><td colspan='6' class='muted'>Không có dữ liệu câu hỏi.</td></tr>";
+    const summaryLeft="<div><b>"+escapeHTML(h.day||"")+"</b> · Đúng: <b>"+(h.correctCount||0)+"</b>/"+(tasks.length||0)+" · Hint: "+(h.hintsUsed||0)+"</div>"
+                     +"<div class='small muted'>"+escapeHTML((h.req&&h.req.text)||"")+"</div>";
+    const summaryRight="<span class='pill'>Điểm: <b>"+(h.scoreDelta||0)+"</b></span>";
+    return "<details class='qbox' style='margin-top:10px'>"
+      +"<summary class='row' style='justify-content:space-between;cursor:pointer'>"
+      +"<div>"+summaryLeft+"</div><div>"+summaryRight+"</div>"
+      +"</summary>"
+      +"<div class='hr'></div>"
+      +"<div class='help'><b>Lý do AI chọn:</b> "+escapeHTML(h.explain||"")+"</div>"
+      +(skillTags?("<div class='row' style='flex-wrap:wrap;margin-top:8px'>"+skillTags+"</div>"):"")
+      +"<div class='hr'></div>"
+      +"<table><thead><tr><th class='right'>KQ</th><th></th><th>Kỹ năng</th><th>Câu hỏi</th><th class='right'>TG</th><th class='right'>Điểm</th></tr></thead><tbody>"
+      +detailRows
+      +"</tbody></table>"
+      +"</details>";
+  }).join("");
+  return "<div class='notice'><div class='row' style='justify-content:space-between'>"
+    +"<div><div class='title'>Kết quả chi tiết</div><div class='small muted'>Xem lại từng ngày và từng câu hỏi</div></div>"
+    +"<span class='pill'>Tổng lượt: <b>"+hist.length+"</b></span>"
+    +"</div></div>"+blocks;
+}
+
+function renderQuestionPreview(){
+  const skill=document.getElementById("filterSkill").value||"";
+  const kw=(document.getElementById("filterText").value||"").trim().toLowerCase();
+  const sn=SKILL_NAME();
+  const list=(DB.questions||[]).filter(q=>{
+    const okSkill=skill? q.skill===skill : true;
+    const okKw=kw? String(q.text||"").toLowerCase().includes(kw):true;
+    return okSkill && okKw && String(q.subject||"").toLowerCase().includes("toán");
+  }).slice(0,6);
+  if(!list.length){document.getElementById("qPreview").innerHTML="<div class='help'>Chưa có câu phù hợp (hoặc chưa import).</div>"; return;}
+  document.getElementById("qPreview").innerHTML=list.map(q=>`
+    <div class="qbox" style="margin-bottom:10px">
+      <div class="row" style="justify-content:space-between">
+        <span class="tag">${escapeHTML(sn[q.skill]||q.skill)}</span>
+        <span class="tag">diff ${q.diff}</span>
+      </div>
+      <div class="qtext" style="margin-top:8px">${escapeHTML(q.text)}</div>
+      <div class="help">Đáp án: <b>${q.ans}</b> · ${escapeHTML(q[q.ans]||"")}</div>
+    </div>
+  `).join("");
+}
+
+function resetToday(stu){const day=todayKey(); stu.history=(stu.history||[]).filter(h=>h.day!==day); saveDB(DB);}
+function renderStudentApp(){
+  const stu=DB.users.student[currentStudentId]; if(!stu) return;
+  document.getElementById("pillToday").textContent="Hôm nay: "+todayKey();
+  document.getElementById("stuTitle").textContent="Học sinh: "+stu.name+(stu.class?(" ("+stu.class+")"):"");
+  document.getElementById("pillStudent").textContent=stu.id;
+  const per=getPerDayForStudent(stu);
+  const lab=document.getElementById("stuPerDayLabel"); if(lab) lab.textContent=String(per);
+  const ssel=document.getElementById("studentPerDay"); if(ssel) ssel.value=String(per);
+
+  document.getElementById("stuStreak").textContent=stu.streak?.current||0;
+  document.getElementById("stuEnergy").textContent=energyFromStreak(stu.streak?.current||0);
+  document.getElementById("stuScore").textContent=Math.round((stu.score||0)*10)/10;
+  const weak=getWeakSkills(stu,1)[0]; document.getElementById("stuWeak").textContent=weak?(SKILL_NAME()[weak]||weak):"—";
+  const wk=calcWeekly(stu);
+  const weakWeek=wk.weakWeek.map(sid=>"• "+(SKILL_NAME()[sid]||sid)).join("<br/>");
+  document.getElementById("weekReportMini").innerHTML="<b>7 ngày:</b> "+wk.daysDone+"/7<br/>Điểm tuần: <b>"+(Math.round(wk.totalDelta*10)/10)+"</b><br/>Gate: <b>"+wk.totalGate+"</b><div class='hr'></div><b>Cần luyện:</b><br/>"+(weakWeek||"Chưa đủ dữ liệu.");
+  const done=(stu.history||[]).find(h=>h.day===todayKey());
+  if(done && !session) document.getElementById("quizArea").innerHTML="<div class='help'>Bạn đã hoàn thành hôm nay ✅</div>";
+  else if(!session) document.getElementById("quizArea").innerHTML="<div class='help'>Nhập yêu cầu rồi bấm “Bắt đầu 5 phút”.</div>";
+  else renderQuestion();
+}
+function startSession(){
+  const stu=DB.users.student[currentStudentId]; const day=todayKey();
+  if((stu.history||[]).some(h=>h.day===day)){toast("Bạn đã làm hôm nay. Bấm làm lại nếu muốn.");return;}
+  const req=document.getElementById("stuReq").value.trim();
+  const perDay=getPerDayForStudent(stu);
+  const sel=pickQuestionsForToday(stu, req, perDay);
+  session={day, req, explain:sel.explain, tasks:sel.tasks.map(q=>({q,start:Date.now(),hintLevel:0})), gateQueue:[], idx:0, total: sel.tasks.length, answers:[], gateAnswers:[], correctCount:0, hintsUsed:0, scoreDelta:0};
+  toast("Bắt đầu!"); renderStudentApp();
+}
+function renderQuestion(){
+  const isGate=session.gateQueue.length>0;
+  const cur=isGate?session.gateQueue[0]:session.tasks[session.idx];
+  const q=cur.q;
+  const prog=isGate?"Gợi mở (Gate)":"Câu "+(session.idx+1)+"/"+(session.total||session.tasks.length);
+  const hintBox=cur.hintLevel>0?("<div class='pill' style='margin-top:10px'>💡 Hint: "+escapeHTML(q["hint"+cur.hintLevel]||"")+"</div>"):"";
+  document.getElementById("quizArea").innerHTML="<div class='qbox'><div class='row' style='justify-content:space-between'><div class='pill'>"+prog+"</div><div class='pill'>"+escapeHTML((SKILL_NAME()[q.skill]||q.skill))+" · diff "+q.diff+"</div></div>"
+    +"<p class='qtext' style='margin-top:10px'>"+escapeHTML(q.text)+"</p>"
+    +["A","B","C","D"].map(L=>"<label class='opt'><input type='radio' name='opt' value='"+L+"'><div class='lab'><b>"+L+".</b> "+escapeHTML(q[L])+"</div></label>").join("")
+    +"<div class='row' style='margin-top:10px'><button class='btn primary' id='btnSubmit'>✅ Trả lời</button><button class='btn' id='btnHint'>💡 Hint (+)</button><span class='pill'>⏱ <b id='timer'>0.0s</b></span></div>"
+    +hintBox+"<div class='hr'></div><div class='help'><b>Lý do AI chọn:</b> "+escapeHTML(session.explain)+"</div></div>";
+  clearInterval(renderQuestion._tm);
+  renderQuestion._tm=setInterval(()=>{const t=(Date.now()-cur.start)/1000; const el=document.getElementById("timer"); if(el) el.textContent=t.toFixed(1)+"s";},100);
+  document.getElementById("btnHint").onclick=()=>{if(cur.hintLevel<3){cur.hintLevel++;session.hintsUsed++;toast("Đã mở hint");renderQuestion();}else toast("Đã hết hint");};
+  document.getElementById("btnSubmit").onclick=()=>submitAnswer();
+}
+function submitAnswer(){
+  const stu=DB.users.student[currentStudentId];
+  const isGate=session.gateQueue.length>0;
+  const cur=isGate?session.gateQueue[0]:session.tasks[session.idx];
+  const q=cur.q;
+  const chosen=(document.querySelector("input[name='opt']:checked")||{}).value;
+  if(!chosen){toast("Chọn 1 đáp án");return;}
+  const elapsedMs=Date.now()-cur.start;
+  const isCorrect=(chosen===q.ans);
+  const eff=applyAnswerEffects(q,isCorrect,cur.hintLevel,elapsedMs,isGate);
+  session.scoreDelta+=eff.delta;
+  stu.mastery=stu.mastery||{};
+  stu.mastery[q.skill]=(stu.mastery[q.skill]??0)+eff.masteryDelta;
+  const obj={qid:q.id,skill:q.skill,diff:q.diff,correct:isCorrect,hints:cur.hintLevel,elapsedMs:Math.round(elapsedMs),delta:eff.delta,gate:isGate};
+  (isGate?session.gateAnswers:session.answers).push(obj);
+  if(isCorrect && !isGate) session.correctCount++;
+  if(!isGate && !isCorrect && elapsedMs<fastThresholdMs(q.diff)){
+    const avoid=new Set([q.id,...session.answers.map(a=>a.qid),...session.gateAnswers.map(a=>a.qid)]);
+    const gq=pickGateQuestion(q.skill, avoid);
+    if(gq){session.gateQueue.unshift({q:gq,start:Date.now(),hintLevel:1});toast("Sai quá nhanh → làm Gate!");renderQuestion();return;}
+  }
+  clearInterval(renderQuestion._tm);
+  document.getElementById("quizArea").innerHTML="<div class='qbox'><div class='row' style='justify-content:space-between'><div class='pill'>Kết quả</div><div class='pill'>"+escapeHTML((SKILL_NAME()[q.skill]||q.skill))+" · diff "+q.diff+"</div></div>"
+    +"<div style='margin-top:10px;font-size:18px'>"+(isCorrect?"<span class='good'>✅ Đúng</span>":"<span class='bad'>❌ Sai</span>")+" <span class='pill'>Điểm <b>"+eff.delta+"</b></span> <span class='pill'>"+(elapsedMs/1000).toFixed(1)+"s</span></div>"
+    +"<div class='hr'></div><div class='help'><b>Giải thích:</b> "+escapeHTML(q.explain||"")+"</div><div class='help' style='margin-top:8px'><b>Đáp án:</b> "+q.ans+" · <b>"+escapeHTML(q[q.ans]||"")+"</b></div>"
+    +"<div class='row' style='margin-top:12px'><button class='btn primary' id='btnNext'>➡️ Tiếp tục</button></div></div>";
+  document.getElementById("btnNext").onclick=()=>{
+    if(isGate){session.gateQueue.shift();} else session.idx++;
+    if(session.gateQueue.length){renderQuestion();return;}
+    if(session.idx>=session.tasks.length){finishSession();return;}
+    session.tasks[session.idx].start=Date.now(); renderQuestion();
+  };
+}
+function finishSession(){
+  const stu=DB.users.student[currentStudentId];
+  const day=todayKey();
+  updateStreak(stu,day);
+  stu.score=(stu.score||0)+session.scoreDelta;
+  stu.history=stu.history||[];
+  stu.history.push({day,req:{text:session.req,parsedSkills:parseRequirement(session.req)},explain:session.explain,tasks:session.answers,gateTasks:session.gateAnswers,correctCount:session.correctCount,hintsUsed:session.hintsUsed,scoreDelta:Math.round(session.scoreDelta*10)/10});
+  session=null; saveDB(DB); toast("Hoàn thành hôm nay ✅"); renderStudentApp();
+}
+
+function seedDemo(){
+  const sample=[{id:"hs001",name:"Lò Văn A",class:"9A"},{id:"hs002",name:"Lò Thị B",class:"9A"},{id:"hs003",name:"Nguyễn Văn C",class:"9B"}];
+  for(const s of sample){if(!DB.users.student[s.id]) DB.users.student[s.id]={id:s.id,name:s.name,class:s.class,pw:"123456",score:0,mastery:{},streak:{current:0,best:0,lastDay:null},history:[],settings:{perDay:DB.meta.settings.perDayDefault ?? 5}};}
+  
+  // Parent demo (ph01) giám sát hs001
+  if(!DB.users.parent) DB.users.parent={};
+  if(!DB.users.parent["ph01"]){DB.users.parent["ph01"]={id:"ph01",name:"PH Demo",pw:"123456",children:["hs001"],createdAt:Date.now()};}
+saveDB(DB); toast("Đã tạo demo.");
+}
+function seed7DaysForStudent(sid){
+  const stu=DB.users.student[sid]; if(!stu) return;
+  const base=nowDate(); const days=[]; for(let i=6;i>=0;i--){const d=new Date(base); d.setDate(base.getDate()-i); days.push(fmtDate(d));}
+  const existed=new Set((stu.history||[]).map(h=>h.day));
+  for(const dayStr of days){
+    if(existed.has(dayStr)) continue;
+    const req=(Math.random()<0.55)?"luyện hệ phương trình":(Math.random()<0.5?"góc nội tiếp":"");
+    const perDay=getPerDayForStudent(stu);
+    const sel=pickQuestionsForToday(stu,req, perDay);
+    let answers=[],gateAnswers=[],correctCount=0,hintsUsed=0,scoreDelta=0;
+    for(const q of sel.tasks){
+      const willCorrect=Math.random()<0.75;
+      const hint=(Math.random()<0.22)?1:0; hintsUsed+=hint;
+      const elapsed=willCorrect?(2800+Math.random()*3500):(900+Math.random()*1800);
+      const eff=applyAnswerEffects(q,willCorrect,hint,elapsed,false); scoreDelta+=eff.delta;
+      stu.mastery[q.skill]=(stu.mastery[q.skill]??0)+eff.masteryDelta;
+      answers.push({qid:q.id,skill:q.skill,diff:q.diff,correct:willCorrect,hints:hint,elapsedMs:Math.round(elapsed),delta:eff.delta,gate:false});
+      if(willCorrect) correctCount++;
+      if(!willCorrect && elapsed<fastThresholdMs(q.diff)){
+        const avoid=new Set([q.id,...answers.map(a=>a.qid),...gateAnswers.map(a=>a.qid)]);
+        const gq=pickGateQuestion(q.skill,avoid);
+        if(gq){
+          const geff=applyAnswerEffects(gq,true,1,3200,true); scoreDelta+=geff.delta; hintsUsed+=1;
+          gateAnswers.push({qid:gq.id,skill:gq.skill,diff:gq.diff,correct:true,hints:1,elapsedMs:3200,delta:geff.delta,gate:true});
+        }
+      }
+    }
+    updateStreak(stu,dayStr);
+    stu.score=(stu.score||0)+scoreDelta;
+    stu.history.push({day:dayStr,req:{text:req,parsedSkills:parseRequirement(req)},explain:sel.explain,tasks:answers,gateTasks:gateAnswers,correctCount,hintsUsed,scoreDelta:Math.round(scoreDelta*10)/10});
+  }
+  saveDB(DB);
+}
+
+function show(id){document.getElementById("viewLogin").classList.add("hidden");document.getElementById("viewTeacher").classList.add("hidden");document.getElementById("viewStudent").classList.add("hidden");document.getElementById(id).classList.remove("hidden");}
+function refreshKPIs(){
+  document.getElementById("kpiQB").textContent=(DB.questions||[]).length;
+  document.getElementById("kpiStu").textContent=Object.keys(DB.users.student||{}).length;
+  let total=0,best=0;
+  for(const sid in DB.users.student){const stu=DB.users.student[sid]; total+=calcWeekly(stu).daysDone; best=Math.max(best, stu.streak?.best||0);}
+  document.getElementById("kpi7").textContent=total;
+  document.getElementById("kpiStreak").textContent=best;
+}
+function renderTeacher(){
+  document.getElementById("pillMode").textContent="Chế độ: Giáo viên";
+  document.getElementById("pillTeacher").textContent=currentTeacher.id+" · "+currentTeacher.name;
+  show("viewTeacher");
+  refreshPerDayUI();
+  const sel=document.getElementById("teacherStudentSelect");
+  const stus=Object.values(DB.users.student||{}).sort((a,b)=>a.id.localeCompare(b.id));
+  sel.innerHTML=stus.map(s=>"<option value='"+s.id+"'>"+s.id+" — "+escapeHTML(s.name)+" "+(s.class?("("+escapeHTML(s.class)+")"):"")+"</option>").join("");
+  teacherSelected=sel.value || (stus[0]?.id||null);
+  if(teacherSelected) sel.value=teacherSelected;
+  sel.onchange=()=>{teacherSelected=sel.value; document.getElementById("teacherReport").innerHTML=""; const th=document.getElementById("teacherHistory"); if(th) th.innerHTML="";};
+  const fs=document.getElementById("filterSkill");
+  fs.innerHTML="<option value=''>Tất cả chủ đề</option>"+(DB.skills||[]).map(s=>"<option value='"+s.id+"'>"+escapeHTML(s.name)+" ("+s.id+")</option>").join("");
+  fs.onchange=renderQuestionPreview;
+  document.getElementById("filterText").oninput=()=>{clearTimeout(renderQuestionPreview._t);renderQuestionPreview._t=setTimeout(renderQuestionPreview,180);};
+  renderQuestionPreview();
+}
+function renderStudent(){document.getElementById("pillMode").textContent="Chế độ: Học sinh"; show("viewStudent"); refreshPerDayUI(); renderStudentApp();}
+function refreshAll(){refreshKPIs(); if(currentTeacher) renderTeacher(); if(currentStudentId) renderStudent();}
+
+document.getElementById("btnResetAll").onclick=()=>{ if(confirm("Xoá toàn bộ dữ liệu?")){ localStorage.removeItem(LS_KEY); DB=newDB(); saveDB(DB); currentTeacher=null; currentStudentId=null; session=null; teacherSelected=null; document.getElementById("pillMode").textContent="Chưa đăng nhập"; show("viewLogin");
+refreshPerDayUI(); toast("Đã reset."); } };
+document.getElementById("btnGuide").onclick=()=>document.getElementById("guideBox").classList.toggle("hidden");
+
+document.getElementById("btnLogin").onclick=()=>{
+  const role=document.getElementById("role").value;
+  const id=document.getElementById("loginId").value.trim();
+  const pw=document.getElementById("loginPw").value.trim();
+
+  const loginAs=(r,uid)=>{
+    if(r==="teacher"){
+      currentTeacher=uid; currentStudentId=null; currentParentId=null; session=null; renderTeacher(); return;
+    }
+    if(r==="parent"){
+      currentParentId=uid; currentTeacher=null; currentStudentId=null; session=null; renderParent(); return;
+    }
+    currentStudentId=uid; currentTeacher=null; currentParentId=null; session=null; renderStudent();
+  };
+
+  if(role==="teacher"){
+    const u=DB.users.teacher[id];
+    if(!u||u.pw!==pw){toast("Sai tài khoản hoặc mật khẩu."); return;}
+    loginAs("teacher", id); return;
+  }
+  if(role==="parent"){
+    const u=(DB.users.parent||{})[id];
+    if(!u||u.pw!==pw){toast("Sai tài khoản hoặc mật khẩu."); return;}
+    loginAs("parent", id); return;
+  }
+  const u=DB.users.student[id];
+  if(!u||u.pw!==pw){toast("Sai tài khoản hoặc mật khẩu."); return;}
+  loginAs("student", id);
+};
+document.getElementById("btnDemo").onclick=()=>{seedDemo(); toast("Dùng gv01/123456 hoặc hs001/123456");};
+
+document.getElementById("btnLogoutT").onclick=()=>{currentTeacher=null; teacherSelected=null; document.getElementById("pillMode").textContent="Chưa đăng nhập"; show("viewLogin"); toast("Đã đăng xuất");};
+document.getElementById("btnLogoutS").onclick=()=>{currentStudentId=null; session=null; document.getElementById("pillMode").textContent="Chưa đăng nhập"; show("viewLogin"); toast("Đã đăng xuất");};
+
+document.getElementById("btnExportDB").onclick=exportDB;
+document.getElementById("btnNextDay").onclick=nextTestDay;
+document.getElementById("btnResetDay").onclick=resetTestOffset;
+document.getElementById("btnSeed7").onclick=()=>{ if(!teacherSelected) return toast("Chọn học sinh"); seed7DaysForStudent(teacherSelected); toast("Đã tạo dữ liệu 7 ngày."); };
+
+document.getElementById("btnViewReport").onclick=()=>{ if(!teacherSelected) return toast("Chọn học sinh"); document.getElementById("teacherReport").innerHTML=renderReportCard(DB.users.student[teacherSelected]); };
+document.getElementById("btnPrintReport").onclick=()=>{
+  const r=document.getElementById("reportPrintable");
+  if(!r){toast("Hãy bấm “Xem báo cáo” trước.");return;}
+  const win=window.open("","_blank");
+  if(!win){toast("Trình duyệt chặn pop-up. Cho phép pop-up để in/PDF.");return;}
+  const css=document.querySelector("style").innerHTML;
+  win.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Báo cáo 7 ngày</title><style>${css} body{background:#fff} header{display:none} .wrap{max-width:900px} .card,.qbox{box-shadow:none}</style></head><body><div class="wrap">${r.outerHTML}</div><script>window.onload=()=>{window.print();};<\/script></body></html>`);
+  win.document.close();
+};
+
+document.getElementById("btnViewHistoryT").onclick=()=>{
+  if(!teacherSelected){toast("Chọn học sinh trước.");return;}
+  const stu=DB.users.student[teacherSelected];
+  const box=document.getElementById("teacherHistory");
+  if(!stu){toast("Không tìm thấy học sinh."); if(box) box.innerHTML=""; return;}
+  if(box) box.innerHTML=renderHistoryCard(stu);
+};
+
+document.getElementById("btnStart").onclick=startSession;
+document.getElementById("btnResetToday").onclick=()=>{ const stu=DB.users.student[currentStudentId]; if(confirm("Xoá bài làm hôm nay?")){ resetToday(stu); session=null; toast("Đã xoá hôm nay."); renderStudentApp(); } };
+document.getElementById("btnShowWeek").onclick=()=>{ const stu=DB.users.student[currentStudentId]; document.getElementById("quizArea").innerHTML=renderReportCard(stu); };
+// 🎮 Game: mở trang trò chơi (mở tab mới để không mất phiên đăng nhập)
+document.getElementById("btnGame").onclick=()=>{
+  const stu=DB.users.student[currentStudentId];
+  try{ localStorage.setItem("qh_player", JSON.stringify({name: (stu?.name||"Người chơi").slice(0,18)})); }catch(_){ }
+  const url = "./trochoi.html";
+  const w = window.open(url, "_blank");
+  if(!w) window.location.href = url; // nếu trình duyệt chặn popup
+};
+
+function readAsArrayBuffer(file){
+  return new Promise((res,rej)=>{
+    const fr=new FileReader();
+    fr.onload=()=>res(fr.result);
+    fr.onerror=()=>rej(fr.error);
+    fr.readAsArrayBuffer(file);
+  });
+}
+function openFile(kind){
+  const fp=document.getElementById("filePicker");
+  fp.value="";
+  // set accept by kind
+  if(kind==="students") fp.accept=".csv,.txt";
+  else if(kind==="questions") fp.accept=".csv,.txt";
+  else if(kind==="students_xlsx") fp.accept=".xlsx,.xls";
+  else if(kind==="questions_docx") fp.accept=".docx";
+  else fp.accept=".csv,.txt,.json,.xlsx,.xls,.docx";
+
+  fp.onchange=async ev=>{
+    const file=ev.target.files[0]; if(!file) return;
+
+    // CSV (students/questions)
+    if(kind==="students" || kind==="questions"){
+      const text=(await file.text()).replace(/^\uFEFF/,"");
+      const objs=rowsToObjects(parseCSV(text));
+      if(kind==="students") importStudentsCSV(objs);
+      if(kind==="questions") importQuestionsCSV(objs);
+      return;
+    }
+
+    // Excel (students)
+    if(kind==="students_xlsx"){
+      if(typeof XLSX==="undefined"){ toast("Thiếu thư viện XLSX. Hãy mở lại khi có mạng 1 lần để tải thư viện."); return; }
+      const buf=await readAsArrayBuffer(file);
+      const wb=XLSX.read(buf,{type:"array"});
+      const sn=wb.SheetNames[0];
+      const sheet=wb.Sheets[sn];
+      const rows=XLSX.utils.sheet_to_json(sheet,{defval:""});
+      // chấp nhận nhiều tên cột: id / ID / ma / mã, name / họ và tên, class / lớp, pw / mật khẩu
+      const objs=rows.map(r=>({
+        id: r.id||r.ID||r.Id||r.ma||r["mã"]||r["Mã"]||r["Mã HS"]||r["ma_hs"]||"",
+        name: r.name||r["Họ và tên"]||r["Họ tên"]||r["Tên"]||r["hoten"]||"",
+        class: r.class||r.lop||r["Lớp"]||r["lop"]||"",
+        pw: r.pw||r["Mật khẩu"]||r["matkhau"]||""
+      }));
+      importStudentsCSV(objs);
+      return;
+    }
+
+    // Word DOCX (questions)
+    if(kind==="questions_docx"){
+      if(typeof mammoth==="undefined"){ toast("Thiếu thư viện Mammoth (DOCX). Hãy mở lại khi có mạng 1 lần để tải thư viện."); return; }
+      const buf=await readAsArrayBuffer(file);
+      const result=await mammoth.extractRawText({arrayBuffer:buf});
+      const text=(result.value||"").replace(/\r/g,"");
+      const objs=parseQuestionsFromDOCX(text);
+      if(!objs.length){ toast("Không đọc được câu hỏi từ Word. Hãy dùng đúng mẫu Word (xem hướng dẫn trong README)."); return; }
+      importQuestionsCSV(objs);
+      return;
+    }
+  };
+  fp.click();
+}
+
+// ====== Import Word (DOCX) → objects giống CSV ======
+function parseQuestionsFromDOCX(raw){
+  const text=String(raw||"").replace(/\uFEFF/g,"").trim();
+  if(!text) return [];
+  // Tách theo "Câu 1", "Câu 2", "Q1"...
+  const blocks=[];
+  const rx=/^(?:\s*(?:Câu|CAU|Q)\s*\d+\s*[:\.\-]?\s*)([\s\S]*?)(?=^\s*(?:Câu|CAU|Q)\s*\d+\s*[:\.\-]?\s*|\s*$)/gmi;
+  let m;
+  while((m=rx.exec(text))!==null){
+    const body=(m[1]||"").trim();
+    if(body) blocks.push(body);
+  }
+  // Nếu không có "Câu 1" thì tách theo 2 dòng trống
+  if(!blocks.length){
+    text.split(/\n\s*\n\s*\n+/).forEach(b=>{b=b.trim(); if(b) blocks.push(b);});
+  }
+
+  const out=[];
+  for(const b of blocks){
+    const lines=b.split("\n").map(x=>x.trim()).filter(x=>x.length);
+    if(!lines.length) continue;
+
+    let subject="Toán 9";
+    let skill="";
+    let diff=1;
+    let ans="";
+    let qText=[];
+    let explain="";
+    let hint1="",hint2="",hint3="";
+    const opts={A:"",B:"",C:"",D:""};
+    let mode="q";
+    let curOpt="";
+
+    function flushLineToCurrentOption(line){
+      if(curOpt){
+        opts[curOpt]=(opts[curOpt] ? (opts[curOpt]+" "+line) : line);
+        return true;
+      }
+      return false;
+    }
+
+    for(let i=0;i<lines.length;i++){
+      const line=lines[i];
+
+      // meta lines
+      let mm;
+      if((mm=line.match(/^(?:môn|mon|subject)\s*[:=]\s*(.+)$/i))){ subject=mm[1].trim()||subject; continue; }
+      if((mm=line.match(/^(?:skill|chủ\s*đề|chu\s*de|ma\s*chu\s*de)\s*[:=]\s*([a-z0-9_ -]+)$/i))){ skill=mm[1].trim().replace(/\s+/g,"_"); continue; }
+      if((mm=line.match(/^(?:độ\s*khó|do\s*kho|diff|level)\s*[:=]\s*([123])$/i))){ diff=Number(mm[1]); continue; }
+      if((mm=line.match(/^(?:đáp\s*án|dap\s*an|ans)\s*[:=]\s*([ABCD])$/i))){ ans=mm[1].toUpperCase(); continue; }
+
+      if((mm=line.match(/^hint\s*1\s*[:=]\s*(.+)$/i))){ hint1=mm[1].trim(); continue; }
+      if((mm=line.match(/^hint\s*2\s*[:=]\s*(.+)$/i))){ hint2=mm[1].trim(); continue; }
+      if((mm=line.match(/^hint\s*3\s*[:=]\s*(.+)$/i))){ hint3=mm[1].trim(); continue; }
+
+      if((mm=line.match(/^(?:giải\s*thích|giai\s*thich|explain)\s*[:=]\s*(.*)$/i))){
+        mode="explain";
+        explain=mm[1].trim();
+        curOpt="";
+        continue;
+      }
+
+      // option lines A/B/C/D
+      if((mm=line.match(/^([ABCD])\s*[\)\.\:\-]\s*(.+)$/i))){
+        curOpt=mm[1].toUpperCase();
+        opts[curOpt]=mm[2].trim();
+        mode="opt";
+        continue;
+      }
+
+      // append to explain if mode explain
+      if(mode==="explain"){
+        // stop explain if encountering another meta/option; but we already handled meta/option above.
+        explain = explain ? (explain+" "+line) : line;
+        continue;
+      }
+
+      // if currently in an option, allow wrapped lines
+      if(mode==="opt" && flushLineToCurrentOption(line)){
+        continue;
+      }
+
+      // otherwise treat as question text
+      qText.push(line);
+    }
+
+    const textQ=qText.join(" ").replace(/\s+/g," ").trim();
+    // Try infer skill from inline tags like [skill=alg_system]
+    if(!skill){
+      const tag=(b.match(/\[skill\s*=\s*([a-z0-9_]+)\]/i)||[])[1];
+      if(tag) skill=tag.trim();
+    }
+    // Try infer diff from tag
+    if(!diff || !(diff>=1&&diff<=3)){
+      const dtag=(b.match(/\[diff\s*=\s*([123])\]/i)||[])[1];
+      if(dtag) diff=Number(dtag);
+      else diff=1;
+    }
+    if(!ans){
+      const atag=(b.match(/\[ans\s*=\s*([ABCD])\]/i)||[])[1];
+      if(atag) ans=atag.toUpperCase();
+    }
+
+    out.push({subject,skill,diff,text:textQ,A:opts.A,B:opts.B,C:opts.C,D:opts.D,ans,explain,hint1,hint2,hint3});
+  }
+  // lọc những block đủ tối thiểu
+  return out.filter(o=>o.text && o.A && o.B && o.C && o.D);
+}
+document.getElementById("btnImportStudents").onclick=()=>openFile("students");
+document.getElementById("btnImportQuestions").onclick=()=>openFile("questions");
+document.getElementById("btnImportStudentsXLSX").onclick=()=>openFile("students_xlsx");
+document.getElementById("btnImportQuestionsDOCX").onclick=()=>openFile("questions_docx");
+
+
+// ====== Cài đặt số câu / ngày ======
+function refreshPerDayUI(){
+  ensureSettings();
+  if(document.getElementById("teacherPerDay")){
+    document.getElementById("teacherPerDay").value = String(clampInt(DB.meta.settings.perDayDefault ?? 5, 3, 15));
+  }
+  if(currentStudentId){
+    const stu=DB.users.student[currentStudentId];
+    const per=getPerDayForStudent(stu);
+    const sel=document.getElementById("studentPerDay");
+    if(sel) sel.value=String(per);
+    const lab=document.getElementById("stuPerDayLabel");
+    if(lab) lab.textContent=String(per);
+  }
+}
+if(document.getElementById("btnSaveTeacherPerDay")){
+  document.getElementById("btnSaveTeacherPerDay").onclick=()=>{
+    ensureSettings();
+    DB.meta.settings.perDayDefault = clampInt(document.getElementById("teacherPerDay").value, 3, 15);
+    saveDB(DB);
+    toast("Đã lưu mặc định: "+DB.meta.settings.perDayDefault+" câu/ngày");
+    refreshPerDayUI();
+  };
+}
+if(document.getElementById("studentPerDay")){
+  document.getElementById("studentPerDay").onchange=()=>{
+    const stu=DB.users.student[currentStudentId];
+    if(!stu) return;
+    setPerDayForStudent(stu, document.getElementById("studentPerDay").value);
+    saveDB(DB);
+    toast("Đã chọn: "+getPerDayForStudent(stu)+" câu hôm nay");
+    refreshPerDayUI();
+  };
+}
+
+// ====== Thêm học sinh thủ công ======
+if(document.getElementById("btnAddStudentManual")){
+  document.getElementById("btnAddStudentManual").onclick=()=>{
+    const box=document.getElementById("manualStudentBox");
+    box.classList.toggle("hidden");
+    if(!box.classList.contains("hidden")) document.getElementById("mstuId").focus();
+  };
+}
+function addStudentManual(){
+  const id=document.getElementById("mstuId").value.trim();
+  const name=document.getElementById("mstuName").value.trim();
+  const cls=document.getElementById("mstuClass").value.trim();
+  const pw=(document.getElementById("mstuPw").value.trim() || "123456");
+  if(!id || !name){ toast("Thiếu ID hoặc họ tên"); return; }
+  if(!/^[a-zA-Z0-9_-]{2,20}$/.test(id)){ toast("ID chỉ gồm chữ/số/_/- (2–20 ký tự)"); return; }
+  DB.users.student = DB.users.student || {};
+  if(DB.users.student[id]){ toast("ID đã tồn tại."); return; }
+  DB.users.student[id]={id,name,class:cls,pw,score:0,mastery:{},streak:{current:0,best:0,lastDay:null},history:[],settings:{perDay:DB.meta.settings.perDayDefault ?? 5}};
+  saveDB(DB);
+  toast("Đã thêm học sinh: "+id);
+  if(currentTeacher) renderTeacher();
+  document.getElementById("mstuId").value="";
+  document.getElementById("mstuName").value="";
+  document.getElementById("mstuClass").value="";
+  document.getElementById("mstuPw").value="";
+  document.getElementById("mstuId").focus();
+}
+if(document.getElementById("btnSaveManualStudent")) document.getElementById("btnSaveManualStudent").onclick=addStudentManual;
+if(document.getElementById("btnClearManualStudent")) document.getElementById("btnClearManualStudent").onclick=()=>{
+  document.getElementById("mstuId").value="";
+  document.getElementById("mstuName").value="";
+  document.getElementById("mstuClass").value="";
+  document.getElementById("mstuPw").value="";
+  toast("Đã xoá ô nhập");
+  document.getElementById("mstuId").focus();
+};
+
+
+// ====== Thêm giáo viên thủ công ======
+if(document.getElementById("btnAddTeacherManual")){
+  document.getElementById("btnAddTeacherManual").onclick=()=>{
+    const box=document.getElementById("manualTeacherBox");
+    box.classList.toggle("hidden");
+    if(!box.classList.contains("hidden")) document.getElementById("mtchId").focus();
+  };
+}
+function addTeacherManual(){
+  const id=document.getElementById("mtchId").value.trim();
+  const name=document.getElementById("mtchName").value.trim();
+  const pw=(document.getElementById("mtchPw").value.trim() || "123456");
+  if(!id || !name){ toast("Thiếu ID hoặc họ tên"); return; }
+  if(!/^[a-zA-Z0-9_-]{2,20}$/.test(id)){ toast("ID chỉ gồm chữ/số/_/- (2–20 ký tự)"); return; }
+
+  DB.users = DB.users || {};
+  DB.users.teacher = DB.users.teacher || {};
+  if(DB.users.teacher[id]){ toast("ID giáo viên đã tồn tại."); return; }
+
+  DB.users.teacher[id]={id,name,pw};
+  saveDB(DB);
+  toast("Đã thêm giáo viên: "+id);
+
+  // Clear inputs
+  document.getElementById("mtchId").value="";
+  document.getElementById("mtchName").value="";
+  document.getElementById("mtchPw").value="";
+  document.getElementById("mtchId").focus();
+}
+if(document.getElementById("btnSaveManualTeacher")) document.getElementById("btnSaveManualTeacher").onclick=addTeacherManual;
+if(document.getElementById("btnClearManualTeacher")) document.getElementById("btnClearManualTeacher").onclick=()=>{
+  document.getElementById("mtchId").value="";
+  document.getElementById("mtchName").value="";
+  document.getElementById("mtchPw").value="";
+  toast("Đã xoá ô nhập");
+  document.getElementById("mtchId").focus();
+};
+
+
+refreshKPIs();
+show("viewLogin");
+
+
+/* ===========================
+   QR Login + Parent Monitoring
+   =========================== */
+function _randKey(len=16){
+  try{
+    const a=new Uint8Array(len);
+    crypto.getRandomValues(a);
+    return Array.from(a).map(b=>b.toString(16).padStart(2,"0")).join("").slice(0,len);
+  }catch(e){
+    return Math.random().toString(16).slice(2,2+len)+Math.random().toString(16).slice(2,2+len);
+  }
+}
+function ensureQrSchema(){
+  if(!DB.users.parent) DB.users.parent={};
+  for(const [id,u] of Object.entries(DB.users.student||{})){
+    if(!u.qrKey) u.qrKey=_randKey(24);
+  }
+  for(const [id,u] of Object.entries(DB.users.teacher||{})){
+    if(!u.qrKey) u.qrKey=_randKey(24); // dự phòng (chưa dùng)
+  }
+  for(const [id,u] of Object.entries(DB.users.parent||{})){
+    if(!u.qrKey) u.qrKey=_randKey(24);
+    if(!Array.isArray(u.children)) u.children=[];
+  }
+  saveDB(DB);
+}
+ensureQrSchema();
+
+function makeQRPayload(role,id,key){
+  // Format: SCQR|v1|role|id|key
+  return ["SCQR","v1",role,String(id||""),String(key||"")].join("|");
+}
+function parseQRPayload(txt){
+  const t=String(txt||"").trim();
+  if(!t.startsWith("SCQR|")) return null;
+  const parts=t.split("|");
+  if(parts.length<5) return null;
+  if(parts[1]!=="v1") return null;
+  return {role:parts[2], id:parts[3], key:parts[4]};
+}
+
+function loginByQR(role,id,key){
+  const loginAs=(r,uid)=>{
+    if(r==="teacher"){ currentTeacher=uid; currentStudentId=null; currentParentId=null; session=null; renderTeacher(); return true; }
+    if(r==="parent"){ currentParentId=uid; currentTeacher=null; currentStudentId=null; session=null; renderParent(); return true; }
+    currentStudentId=uid; currentTeacher=null; currentParentId=null; session=null; renderStudent(); return true;
+  };
+
+  if(role==="student"){
+    const u=(DB.users.student||{})[id];
+    if(!u || u.qrKey!==key){ toast("QR không hợp lệ hoặc đã đổi."); return false; }
+    loginAs("student", id); return true;
+  }
+  if(role==="parent"){
+    const u=(DB.users.parent||{})[id];
+    if(!u || u.qrKey!==key){ toast("QR không hợp lệ hoặc đã đổi."); return false; }
+    loginAs("parent", id); return true;
+  }
+  toast("Vai trò QR chưa hỗ trợ."); 
+  return false;
+}
+
+/* ----- QR Modal (scan) ----- */
+let _qrScanner=null;
+let _qrMode="login"; // 'login' | 'link-child'
+
+function openQRModal(mode="login"){
+  _qrMode=mode;
+  const modal=document.getElementById("qrModal");
+  const title=document.getElementById("qrTitle");
+  const hint=document.getElementById("qrHint");
+  title.textContent = (mode==="login") ? "Đăng nhập bằng QR" : "Quét QR của con để liên kết";
+  hint.textContent  = (mode==="login") ? "Cho phép camera, đưa QR vào khung." : "Phụ huynh: quét QR đăng nhập của học sinh.";
+  modal.classList.remove("hidden");
+  modal.setAttribute("aria-hidden","false");
+
+  // init scanner
+  try{
+    if(!_qrScanner) _qrScanner=new Html5Qrcode("qrReader");
+    _qrScanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 240, height: 240 } },
+      (decodedText)=>{
+        const p=parseQRPayload(decodedText);
+        if(!p){ toast("QR không đúng định dạng."); return; }
+        if(_qrMode==="login"){
+          const ok=loginByQR(p.role,p.id,p.key);
+          if(ok){ closeQRModal(); }
+          return;
+        }
+        // link-child mode
+        if(p.role!=="student"){ toast("Hãy quét QR của Học sinh."); return; }
+        const stu=(DB.users.student||{})[p.id];
+        if(!stu || stu.qrKey!==p.key){ toast("QR học sinh không hợp lệ."); return; }
+        const par=(DB.users.parent||{})[currentParentId];
+        if(!par){ toast("Chưa đăng nhập phụ huynh."); return; }
+        if(!par.children.includes(p.id)) par.children.push(p.id);
+        saveDB(DB);
+        toast("Đã liên kết: "+(stu.name||p.id));
+        renderParentApp();
+        closeQRModal();
+      },
+      ()=>{}
+    ).catch(()=>{ /* nếu lỗi camera sẽ vẫn cho chọn ảnh */ });
+  }catch(e){
+    // ignore
+  }
+}
+async function closeQRModal(){
+  const modal=document.getElementById("qrModal");
+  modal.classList.add("hidden");
+  modal.setAttribute("aria-hidden","true");
+  try{ if(_qrScanner){ await _qrScanner.stop(); await _qrScanner.clear(); } }catch(e){}
+}
+
+document.getElementById("btnQRLogin").onclick=()=>openQRModal("login");
+document.getElementById("btnCloseQR").onclick=closeQRModal;
+document.getElementById("qrModal").addEventListener("click",(e)=>{ if(e.target.id==="qrModal") closeQRModal(); });
+
+document.getElementById("btnQRFromImage").onclick=()=>document.getElementById("qrImageInput").click();
+document.getElementById("qrImageInput").addEventListener("change", async (ev)=>{
+  const f=ev.target.files && ev.target.files[0];
+  if(!f) return;
+  try{
+    if(!_qrScanner) _qrScanner=new Html5Qrcode("qrReader");
+    const res=await _qrScanner.scanFile(f,true);
+    const p=parseQRPayload(res);
+    if(!p){ toast("QR không đúng định dạng."); return; }
+    if(_qrMode==="login"){
+      const ok=loginByQR(p.role,p.id,p.key);
+      if(ok) closeQRModal();
+    }else{
+      if(p.role!=="student"){ toast("Hãy chọn ảnh QR của Học sinh."); return; }
+      const stu=(DB.users.student||{})[p.id];
+      if(!stu || stu.qrKey!==p.key){ toast("QR học sinh không hợp lệ."); return; }
+      const par=(DB.users.parent||{})[currentParentId];
+      if(!par){ toast("Chưa đăng nhập phụ huynh."); return; }
+      if(!par.children.includes(p.id)) par.children.push(p.id);
+      saveDB(DB); toast("Đã liên kết: "+(stu.name||p.id)); renderParentApp(); closeQRModal();
+    }
+  }catch(e){
+    toast("Không đọc được QR từ ảnh.");
+  }finally{
+    ev.target.value="";
+  }
+});
+
+/* ----- Student: show my QR ----- */
+function openMyQR(role,id){
+  const modal=document.getElementById("myQRModal");
+  const box=document.getElementById("myQRCode");
+  const txt=document.getElementById("myQRText");
+  box.innerHTML="";
+  ensureQrSchema();
+  let key="";
+  if(role==="student"){ key=(DB.users.student||{})[id]?.qrKey||""; }
+  if(role==="parent"){ key=(DB.users.parent||{})[id]?.qrKey||""; }
+  const payload=makeQRPayload(role,id,key);
+  txt.textContent=payload;
+  try{
+    new QRCode(box,{text:payload,width:220,height:220});
+  }catch(e){
+    box.innerHTML='<div class="notice">Không tạo được QR trên thiết bị này.</div>';
+  }
+  modal.classList.remove("hidden");
+  modal.setAttribute("aria-hidden","false");
+}
+function closeMyQR(){
+  const modal=document.getElementById("myQRModal");
+  modal.classList.add("hidden");
+  modal.setAttribute("aria-hidden","true");
+}
+document.getElementById("btnMyQR").onclick=()=>{ if(currentStudentId) openMyQR("student", currentStudentId); };
+document.getElementById("btnCloseMyQR").onclick=closeMyQR;
+document.getElementById("myQRModal").addEventListener("click",(e)=>{ if(e.target.id==="myQRModal") closeMyQR(); });
+
+/* ----- Parent view ----- */
+function renderParent(){
+  document.getElementById("pillMode").textContent="Chế độ: Phụ huynh";
+  show("viewParent");
+  renderParentApp();
+}
+function renderParentApp(){
+  const p=(DB.users.parent||{})[currentParentId];
+  if(!p){ show("viewLogin"); toast("Hết phiên đăng nhập."); return; }
+  document.getElementById("parTitle").textContent = "Phụ huynh: "+(p.name||p.id||"");
+  const sel=document.getElementById("selChild");
+  const children=p.children||[];
+  // nếu chưa có con, gợi ý quét QR
+  if(children.length===0){
+    sel.innerHTML='<option value="">(Chưa liên kết)</option>';
+    document.getElementById("parentArea").innerHTML=
+      '<div class="notice"><b>Chưa có học sinh liên kết.</b><br>Hãy bấm <b>➕ Liên kết con bằng QR</b> rồi quét QR đăng nhập của học sinh.</div>';
+    return;
+  }
+  // set default child
+  if(!parentChildId || !children.includes(parentChildId)) parentChildId=children[0];
+  sel.innerHTML=children.map(cid=>{
+    const s=(DB.users.student||{})[cid];
+    const name=s? (s.name||cid) : cid;
+    return '<option value="'+cid+'" '+(cid===parentChildId?'selected':'')+'>'+escapeHtml(name)+' ('+escapeHtml(cid)+')</option>';
+  }).join("");
+  renderParentChild();
+}
+function renderParentChild(){
+  const area=document.getElementById("parentArea");
+  const stu=(DB.users.student||{})[parentChildId];
+  if(!stu){ area.innerHTML='<div class="notice">Không tìm thấy học sinh: '+escapeHtml(parentChildId||"")+'</div>'; return; }
+  area.innerHTML=renderReportCard(stu);
+}
+document.getElementById("selChild").addEventListener("change",(e)=>{ parentChildId=e.target.value; renderParentChild(); });
+document.getElementById("btnShowWeekP").onclick=()=>renderParentChild();
+document.getElementById("btnLinkChildQR").onclick=()=>openQRModal("link-child");
+document.getElementById("btnRefreshP").onclick=()=>{ saveDB(DB); renderParentApp(); };
+document.getElementById("btnLogoutP").onclick=()=>{ currentParentId=null; parentChildId=null; show("viewLogin"); toast("Đã đăng xuất"); };
+
+</script>
+
+<!-- QR MODALS -->
+<div id="qrModal" class="overlay hidden" aria-hidden="true">
+  <div class="modalCard">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div>
+        <div class="title" id="qrTitle">Đăng nhập bằng QR</div>
+        <div class="small muted" id="qrHint">Cho phép camera, đưa QR vào khung.</div>
+      </div>
+      <button class="btn" id="btnCloseQR">✕</button>
+    </div>
+    <div class="hr"></div>
+    <div id="qrReader" style="width:320px;max-width:100%;margin:10px auto;"></div>
+    <div class="row" style="justify-content:center;margin-top:10px">
+      <button class="btn" id="btnQRFromImage">🖼 Chọn ảnh QR</button>
+      <input id="qrImageInput" type="file" accept="image/*" class="hidden">
+    </div>
+    <div class="small muted" style="margin-top:10px;text-align:center">Nếu máy bạn không hỗ trợ camera, hãy dùng “Chọn ảnh QR”.</div>
+  </div>
+</div>
+
+<div id="myQRModal" class="overlay hidden" aria-hidden="true">
+  <div class="modalCard">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div>
+        <div class="title">QR đăng nhập</div>
+        <div class="small muted">Dùng QR này để đăng nhập nhanh trên điện thoại.</div>
+      </div>
+      <button class="btn" id="btnCloseMyQR">✕</button>
+    </div>
+    <div class="hr"></div>
+    <div id="myQRCode" style="display:flex;justify-content:center;margin-top:8px;"></div>
+    <div id="myQRText" class="small muted" style="margin-top:10px;word-break:break-all;text-align:center"></div>
+  </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.10/html5-qrcode.min.js"></script>
+
+</body>
+</html>

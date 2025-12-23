@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quest Học Tập — Trắng Xanh • Sưu tầm Nhân Vật</title>
+
+<style>
+  :root{
+    /* White + Ocean Blue Theme */
+    --bg:#f4fbff;
+    --panel:#ffffff;
+    --line:rgba(7, 94, 177, .18);
+    --text:#0b1b2e;
+    --muted:#3d6fa6;
+
+    --accent:#0b74ff;
+    --accent2:#22c7ff;
+
+    --good:#10b981;
+    --bad:#ef4444;
+    --gold:#f59e0b;
+
+    --r:18px;
+    --shadow: 0 18px 60px rgba(2, 28, 55, .12);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; display:grid; place-items:center;
+    background:
+      radial-gradient(1100px 600px at 20% 10%, rgba(34,199,255,.22), transparent 55%),
+      radial-gradient(900px 600px at 80% 15%, rgba(11,116,255,.18), transparent 60%),
+      radial-gradient(1200px 700px at 50% 120%, rgba(16,185,129,.10), transparent 60%),
+      linear-gradient(180deg, #ffffff, var(--bg));
+    color:var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    padding:16px;
+    overflow-x:hidden;
+  }
+
+  .stars{
+    position:fixed; inset:-40% -40%;
+    opacity:.35; pointer-events:none;
+    background:
+      radial-gradient(2px 2px at 20% 30%, rgba(11,116,255,.18), transparent 55%),
+      radial-gradient(2px 2px at 70% 20%, rgba(34,199,255,.16), transparent 55%),
+      radial-gradient(2px 2px at 40% 75%, rgba(11,116,255,.14), transparent 55%),
+      radial-gradient(1px 1px at 55% 55%, rgba(2,28,55,.10), transparent 55%),
+      radial-gradient(1px 1px at 15% 80%, rgba(2,28,55,.08), transparent 55%);
+    animation: drift 18s linear infinite;
+  }
+  @keyframes drift{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(120px,80px,0)}}
+  canvas#fx{position:fixed; inset:0; pointer-events:none; z-index:40;}
+
+  .app{width:min(1160px,100%); display:grid; grid-template-columns:1.35fr .65fr; gap:14px; position:relative; z-index:2;}
+  @media (max-width:920px){.app{grid-template-columns:1fr}}
+
+  .card{
+    background: linear-gradient(180deg, rgba(34,199,255,.10), rgba(255,255,255,.95) 42%), var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+    backdrop-filter: blur(8px);
+  }
+  .head{
+    padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    border-bottom:1px solid var(--line);
+    background: linear-gradient(180deg, rgba(11,116,255,.08), rgba(255,255,255,.80));
+  }
+  .brand{display:flex; align-items:center; gap:10px; min-width:0}
+  .dot{
+    width:10px;height:10px;border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent2), var(--accent));
+    box-shadow: 0 0 18px rgba(11,116,255,.28);
+  }
+  .brand b{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:1100;}
+  .sub{color:var(--muted); font-size:12px; white-space:nowrap}
+  .pill{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:8px 10px; border-radius:999px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.70);
+    font-size:12px; color:var(--muted); white-space:nowrap;
+  }
+
+  .main{padding:16px; display:flex; flex-direction:column; gap:12px;}
+  .arena{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background: linear-gradient(180deg, rgba(34,199,255,.12), rgba(255,255,255,.92) 55%);
+    padding:14px;
+    position:relative; overflow:hidden;
+  }
+  .row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  .mini{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+
+  .hearts{display:flex; gap:6px; align-items:center;}
+  .heart{
+    width:18px;height:18px;border-radius:5px;
+    background: rgba(11,116,255,.08);
+    border:1px solid rgba(11,116,255,.18);
+    position:relative; transform:rotate(45deg);
+  }
+  .heart::before,.heart::after{
+    content:""; position:absolute; width:18px;height:18px;border-radius:50%;
+    background: inherit; border: inherit;
+  }
+  .heart::before{left:-9px; top:0}
+  .heart::after{left:0; top:-9px}
+  .heart.on{background: rgba(239,68,68,.22); border-color: rgba(239,68,68,.28);}
+
+  .barWrap{
+    width:260px; max-width:100%;
+    height:10px; border-radius:999px;
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(11,116,255,.08);
+    overflow:hidden;
+  }
+  .bar{
+    height:100%; width:0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius:999px;
+    transition:width .25s ease;
+  }
+
+  .bossWrap{display:none; align-items:center; gap:10px;}
+  .bossTag{
+    font-weight:1100; padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(245,158,11,.28);
+    background: rgba(245,158,11,.14);
+    color: #8a4b00;
+  }
+  .hpWrap{
+    width:140px;height:10px;border-radius:999px;
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(11,116,255,.08);
+    overflow:hidden;
+  }
+  .hp{height:100%; width:100%; background: rgba(245,158,11,.45); transition:width .22s ease;}
+
+  .comboFlame{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(255,255,255,.65);
+    font-weight:1100; color:var(--muted);
+  }
+  .comboFlame.hot{
+    color:#8a4b00;
+    border-color: rgba(245,158,11,.26);
+    background: rgba(245,158,11,.12);
+    box-shadow: 0 0 0 6px rgba(245,158,11,.10);
+    animation:pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-1px)}}
+
+  .tag{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(255,255,255,.65);
+    color:var(--muted);
+    font-weight:1100; font-size:12px;
+  }
+  .tag.gold{
+    border-color: rgba(245,158,11,.28);
+    background: rgba(245,158,11,.12);
+    color:#8a4b00;
+  }
+
+  .qbox{
+    margin-top:10px;
+    border:1px solid rgba(11,116,255,.18);
+    border-radius:16px;
+    background: rgba(255,255,255,.85);
+    padding:14px;
+  }
+  .qtext{margin:0; font-size:16px; line-height:1.35; font-weight:1100; color:var(--text);}
+
+  .answers{margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media (max-width:520px){.answers{grid-template-columns:1fr}}
+
+  .btn{
+    appearance:none;
+    border:2px solid rgba(11,116,255,.20);
+    background: rgba(255,255,255,.92);
+    color: var(--text);
+    border-radius:14px;
+    padding:12px;
+    text-align:left;
+    cursor:pointer;
+    user-select:none;
+    transition:.12s ease;
+    font-weight:1100;
+    display:flex; gap:10px; align-items:flex-start;
+    position:relative; overflow:hidden;
+  }
+  .btn:hover{
+    transform:translateY(-1px);
+    background:#ffffff;
+    border-color: rgba(11,116,255,.35);
+    box-shadow: 0 10px 24px rgba(11,116,255,.10);
+  }
+  .btn:active{transform:scale(.99)}
+  .btn[disabled]{opacity:.55; cursor:not-allowed}
+
+  .key{
+    width:28px;height:28px;border-radius:10px;
+    display:grid; place-items:center;
+    border:1px solid rgba(11,116,255,.20);
+    background: rgba(11,116,255,.08);
+    color: var(--accent);
+    flex:0 0 auto;
+  }
+
+  .btn.correct{ border-color: rgba(16,185,129,.40); background: rgba(16,185,129,.10); }
+  .btn.wrong{ border-color: rgba(239,68,68,.40); background: rgba(239,68,68,.10); }
+
+  .note{
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(255,255,255,.78);
+    border-radius:14px;
+    padding:12px;
+    color: var(--muted);
+    line-height:1.4;
+    font-size:13px;
+    white-space:pre-line;
+  }
+
+  .footerBtns{display:flex; gap:10px; flex-wrap:wrap;}
+  .smallBtn{
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(255,255,255,.70);
+    color: var(--text);
+    padding:10px 12px;
+    border-radius:14px;
+    cursor:pointer;
+    user-select:none;
+    font-weight:1100;
+    transition:.12s ease;
+  }
+  .smallBtn:hover{
+    background:#ffffff;
+    transform:translateY(-1px);
+    box-shadow: 0 10px 22px rgba(11,116,255,.10);
+  }
+  .smallBtn:active{transform:scale(.99)}
+
+  .side{padding:14px; display:flex; flex-direction:column; gap:12px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .kpi{
+    border:1px solid rgba(11,116,255,.18);
+    border-radius:16px;
+    background: rgba(255,255,255,.78);
+    padding:12px;
+  }
+  .kpi .num{font-size:18px; font-weight:1100; color:var(--text);}
+  .kpi .lab{font-size:12px; color:var(--muted);}
+
+  .box{
+    border:1px solid rgba(11,116,255,.18);
+    border-radius:16px;
+    background: rgba(255,255,255,.78);
+    padding:12px;
+  }
+  .box h3{margin:0 0 10px; font-size:14px; color:var(--text);}
+  .muted{color:var(--muted); font-size:12px; line-height:1.4;}
+
+  .badgeRow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+  .badge{
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(11,116,255,.08);
+    color: var(--muted);
+    font-weight:1100; font-size:12px;
+  }
+  .badge.on{
+    border-color: rgba(245,158,11,.28);
+    background: rgba(245,158,11,.12);
+    color:#8a4b00;
+  }
+
+  .toast{
+    position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+    background: rgba(255,255,255,.92);
+    border:1px solid rgba(11,116,255,.18);
+    color: var(--text);
+    padding:10px 12px;
+    border-radius:14px;
+    box-shadow: 0 18px 60px rgba(2, 28, 55, .18);
+    opacity:0; pointer-events:none; transition:.22s ease;
+    max-width:min(720px, calc(100vw - 24px));
+    text-align:center; font-weight:1100; z-index:60;
+  }
+  .toast.on{opacity:1; transform:translateX(-50%) translateY(-6px);}
+
+  .overlay{position:fixed; inset:0; background: rgba(2, 28, 55, .35); display:none; align-items:center; justify-content:center; z-index:70; padding:16px;}
+  .modal{
+    width:min(880px, 100%);
+    border-radius:20px;
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(255,255,255,.92);
+    box-shadow: 0 24px 90px rgba(2, 28, 55, .22);
+    overflow:hidden;
+  }
+  .modalHead{
+    padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    border-bottom:1px solid rgba(11,116,255,.18);
+    background: linear-gradient(180deg, rgba(34,199,255,.18), rgba(255,255,255,.92));
+  }
+  .modalBody{padding:16px;}
+
+  .grid3{display:grid; grid-template-columns: 1.1fr .9fr; gap:12px;}
+  @media(max-width:820px){ .grid3{grid-template-columns:1fr} }
+
+  .charGrid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:10px;
+  }
+  @media(max-width:520px){ .charGrid{grid-template-columns:1fr} }
+
+  .charCard{
+    border:1px solid rgba(11,116,255,.18);
+    border-radius:16px;
+    background: rgba(255,255,255,.78);
+    padding:12px;
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  .charIcon{
+    width:42px;height:42px;border-radius:14px;
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(11,116,255,.08);
+    display:grid; place-items:center;
+    font-size:22px;
+    flex:0 0 auto;
+  }
+  .charCard b{font-weight:1100}
+  .rar{font-size:11px; color:var(--muted); margin-top:2px}
+  .desc{font-size:12px; color:var(--muted); line-height:1.35; margin-top:6px}
+  .miniRow{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; align-items:center}
+
+  .btnTiny{
+    padding:7px 10px; border-radius:12px; cursor:pointer;
+    border:1px solid rgba(11,116,255,.18);
+    background: rgba(255,255,255,.85);
+    color: var(--text);
+    font-weight:1000;
+  }
+  .btnTiny:hover{background:#fff; box-shadow: 0 10px 22px rgba(11,116,255,.10)}
+  .btnTiny.gold{
+    border-color: rgba(245,158,11,.28);
+    background: rgba(245,158,11,.12);
+    color:#8a4b00;
+  }
+
+  .selected{ outline: 2px solid rgba(34,199,255,.45); }
+
+  .shake{animation:shake .28s ease;}
+  @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}100%{transform:translateX(0)}}
+  .flashGood{box-shadow:0 0 0 10px rgba(16,185,129,.08) inset;}
+  .flashBad{box-shadow:0 0 0 10px rgba(239,68,68,.08) inset;}
+</style>
+</head>
+
+<body>
+
+<!-- Back to Student -->
+<button id="btnBack" style="position:fixed;top:14px;left:14px;z-index:99;padding:10px 12px;border-radius:14px;border:1px solid rgba(11,116,255,.18);background:rgba(255,255,255,.92);font-weight:1100;cursor:pointer;box-shadow:0 10px 30px rgba(2,28,55,.12)">🔙 Quay lại</button>
+<div class="stars"></div>
+<canvas id="fx"></canvas>
+
+<div class="app">
+  <section class="card">
+    <div class="head">
+      <div class="brand">
+        <span class="dot"></span>
+        <div style="min-width:0">
+          <b id="title">Quest Học Tập — Trắng Xanh</b>
+          <div class="sub" id="subTitle">Sưu tầm nhân vật • Buff • Vòng quay • Streak</div>
+        </div>
+      </div>
+      <div class="pill">
+        ⏱ <b id="timeTxt">0</b>s
+        <span style="opacity:.5">•</span>
+        🔥 <b id="comboTxt">0</b>
+        <span style="opacity:.5">•</span>
+        🎫 <b id="reviveTxt">0</b>
+        <span style="opacity:.5">•</span>
+        💰 <b id="coinTxt">0</b>
+        <span style="opacity:.5">•</span>
+        ⭐ <b id="scoreTxt">0</b>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="arena" id="arena">
+        <div class="row">
+          <div class="mini">
+            <div class="hearts" id="hearts"></div>
+            <div class="comboFlame" id="comboFlame">🔥 Combo x1.00</div>
+            <span class="tag" id="blitzTag" style="display:none">⚡ BLITZ x2</span>
+            <span class="tag gold" id="charTag">🧙 Chưa chọn nhân vật</span>
+          </div>
+
+          <div class="mini">
+            <div class="barWrap"><div class="bar" id="bar"></div></div>
+            <div class="bossWrap" id="bossWrap">
+              <span class="bossTag">BOSS</span>
+              <div class="hpWrap"><div class="hp" id="hp"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qbox">
+          <p class="qtext" id="qText">Nhấn “Bắt đầu” để chơi.</p>
+          <div class="answers" id="answers"></div>
+        </div>
+
+        <div class="note" id="note">
+Hướng dẫn nhanh:
+- Bấm 🧙 Sưu tầm nhân vật → Mở rương bằng xu → Chọn nhân vật để buff
+- Mỗi 5 câu: Vòng quay thưởng
+- Đúng liên tiếp 3/5/7/10: nổ quà
+- BLITZ ngẫu nhiên: 15s x2 điểm
+Phím: H = gợi ý “AI”
+        </div>
+      </div>
+
+      <div class="footerBtns">
+        <button class="smallBtn" id="btnStart">▶️ Bắt đầu</button>
+        <button class="smallBtn" id="btnChars">🧙 Sưu tầm nhân vật</button>
+        <button class="smallBtn" id="btn5050">🌓 50:50</button>
+        <button class="smallBtn" id="btnFreeze">🧊 +5s</button>
+        <button class="smallBtn" id="btnShield">🛡️ Khiên</button>
+        <button class="smallBtn" id="btnRestart">♻️ Chơi lại</button>
+        <button class="smallBtn" id="btnSound">🔊 Âm thanh: ON</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="card">
+    <div class="head">
+      <div class="brand"><span class="dot"></span><b>Bảng điều khiển</b></div>
+      <div class="pill">👤 <b id="playerName">Người chơi</b></div>
+    </div>
+
+    <div class="side">
+      <div class="grid2">
+        <div class="kpi"><div class="num" id="lvlTxt">1</div><div class="lab">Ải</div></div>
+        <div class="kpi"><div class="num" id="progTxt">0/10</div><div class="lab">Tiến độ</div></div>
+        <div class="kpi"><div class="num" id="accTxt">0%</div><div class="lab">Chính xác</div></div>
+        <div class="kpi"><div class="num" id="streakTxt">0</div><div class="lab">Đúng liên tiếp</div></div>
+      </div>
+
+      <div class="box">
+        <h3>🧙 Nhân vật đang chọn</h3>
+        <div class="muted" id="charBox">Chưa chọn</div>
+        <div class="badgeRow" id="charBadges"></div>
+      </div>
+
+      <div class="box">
+        <h3>🎯 Danh hiệu</h3>
+        <div class="muted" id="titleBox">-</div>
+      </div>
+
+      <div class="box">
+        <h3>🧠 Gợi ý “AI”</h3>
+        <div class="muted" id="aiBox">Nhấn phím <b>H</b> để gợi ý.</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modalHead">
+      <div class="brand"><span class="dot"></span><b id="modalTitle">-</b></div>
+      <button class="smallBtn" id="modalClose">Đóng</button>
+    </div>
+    <div class="modalBody" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* =============================
+   CÂU HỎI (BẠN THAY 20 CÂU LỚP 9 Ở ĐÂY)
+============================= */
+const QUESTION_BANK = [
+  { q:"Giải phương trình: 2x - 5 = 9", a:["x=2","x=7","x=-2","x=-7"], correct:1 },
+  { q:"Δ của x² - 4x + 3 = 0 là", a:["4","7","16","1"], correct:0 },
+  { q:"Rút gọn: (x² - 9)/(x - 3), x≠3", a:["x-3","x+3","x²-3","x²+3"], correct:1 },
+  { q:"Điều kiện để √(2x-1) xác định", a:["2x-1>0","2x-1≥0","2x-1<0","x≠0"], correct:1 },
+  { q:"Tam giác vuông có 2 cạnh 3 và 4, cạnh huyền là", a:["5","6","7","4.5"], correct:0 },
+  { q:"Hệ số góc của y=-3x+1 là", a:["1","-3","3","0"], correct:1 },
+  { q:"Giải bất phương trình: x+4>1", a:["x>-3","x>3","x<-3","x<3"], correct:0 },
+  { q:"(a+b)² bằng", a:["a²+b²","a²+2ab+b²","a²-2ab+b²","2a²+2b²"], correct:1 },
+  { q:"Nếu 2^x = 8 thì x =", a:["2","3","4","8"], correct:1 },
+  { q:"Giải hệ: x+y=5; x-y=1", a:["x=3,y=2","x=2,y=3","x=4,y=1","x=1,y=4"], correct:0 },
+  { q:"Chu vi đường tròn bán kính R là", a:["πR²","2πR","πR","4πR"], correct:1 },
+  { q:"Giá trị | -12 | là", a:["-12","12","0","1"], correct:1 },
+  { q:"x²=16 có nghiệm", a:["x=4","x=-4","x=±4","Vô nghiệm"], correct:2 },
+  { q:"3x-(2x-5) =", a:["x-5","x+5","5x-5","x-7"], correct:1 },
+  { q:"Nếu (x-2)(x+5)=0 thì x", a:["2 hoặc -5","-2 hoặc 5","2 hoặc 5","-2 hoặc -5"], correct:0 },
+  { q:"Giải: 5x=25", a:["x=5","x=25","x=0","x=-5"], correct:0 },
+  { q:"Giá trị của 3² là", a:["6","9","3","12"], correct:1 },
+  { q:"Phân thức 1/x xác định khi", a:["x=0","x≠0","x>0","x<0"], correct:1 },
+  { q:"Tổng các góc trong tam giác bằng", a:["90°","180°","360°","270°"], correct:1 },
+  { q:"Công thức Pitago", a:["a²=b²+c²","a²+b²=c²","a=b+c","a=b-c"], correct:1 },
+];
+
+/* =============================
+   NHÂN VẬT + BUFF (SƯU TẦM)
+============================= */
+const CHAR_POOL = [
+  { id:"navi", name:"Navi Thủy Tinh", icon:"🧚", rarity:"Common",
+    desc:"Tăng xu nhận được mỗi câu đúng.",
+    buffBase:{ coinMult:1.10, scoreMult:1.00, timePlus:0, shieldChance:0.00, startCombo:0, revivePlus:0 },
+    buffPerLv:{ coinMult:0.03, scoreMult:0.00, timePlus:0, shieldChance:0.00, startCombo:0, revivePlus:0 }
+  },
+  { id:"atlas", name:"Atlas Kỷ Luật", icon:"🧠", rarity:"Common",
+    desc:"Tăng điểm.",
+    buffBase:{ coinMult:1.00, scoreMult:1.08, timePlus:0, shieldChance:0.00, startCombo:0, revivePlus:0 },
+    buffPerLv:{ coinMult:0.00, scoreMult:0.02, timePlus:0, shieldChance:0.00, startCombo:0, revivePlus:0 }
+  },
+  { id:"chrono", name:"Chrono Đồng Hồ", icon:"⏳", rarity:"Rare",
+    desc:"Mỗi câu +thời gian.",
+    buffBase:{ coinMult:1.00, scoreMult:1.00, timePlus:2, shieldChance:0.00, startCombo:0, revivePlus:0 },
+    buffPerLv:{ coinMult:0.00, scoreMult:0.00, timePlus:1, shieldChance:0.00, startCombo:0, revivePlus:0 }
+  },
+  { id:"aegis", name:"Aegis Khiên Lam", icon:"🛡️", rarity:"Rare",
+    desc:"Có cơ hội chặn mất tim khi sai/hết giờ.",
+    buffBase:{ coinMult:1.00, scoreMult:1.00, timePlus:0, shieldChance:0.18, startCombo:0, revivePlus:0 },
+    buffPerLv:{ coinMult:0.00, scoreMult:0.00, timePlus:0, shieldChance:0.04, startCombo:0, revivePlus:0 }
+  },
+  { id:"spark", name:"Spark Combo", icon:"🔥", rarity:"Epic",
+    desc:"Vào game có combo sẵn, lên combo nhanh.",
+    buffBase:{ coinMult:1.00, scoreMult:1.00, timePlus:0, shieldChance:0.00, startCombo:2, revivePlus:0 },
+    buffPerLv:{ coinMult:0.00, scoreMult:0.00, timePlus:0, shieldChance:0.00, startCombo:1, revivePlus:0 }
+  },
+  { id:"phoenix", name:"Phượng Hoàng Băng", icon:"🕊️", rarity:"Legendary",
+    desc:"Tặng thêm vé hồi sinh theo level + tăng điểm nhẹ.",
+    buffBase:{ coinMult:1.00, scoreMult:1.05, timePlus:0, shieldChance:0.00, startCombo:0, revivePlus:1 },
+    buffPerLv:{ coinMult:0.00, scoreMult:0.01, timePlus:0, shieldChance:0.00, startCombo:0, revivePlus:1 }
+  },
+];
+
+function rarityLabel(r){
+  if(r==="Legendary") return "🌟 Legendary";
+  if(r==="Epic") return "💜 Epic";
+  if(r==="Rare") return "💙 Rare";
+  return "⚪ Common";
+}
+
+/* =============================
+   UTIL + SFX
+============================= */
+const KEY = ["A","B","C","D"];
+const $ = (id)=>document.getElementById(id);
+let SND = true;
+
+const store = {
+  get(k, d=null){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(_){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){ } }
+};
+
+let player = store.get("qh_player", {name:"Người chơi"});
+$("playerName").textContent = player.name;
+
+let inv = store.get("qh_inv", {});
+let selectedCharId = store.get("qh_selChar", "navi");
+if(!inv["navi"]){ inv["navi"] = {lvl:1, shards:0}; store.set("qh_inv", inv); }
+if(!selectedCharId || !inv[selectedCharId]){ selectedCharId="navi"; store.set("qh_selChar", selectedCharId); }
+
+function getCharDef(id){ return CHAR_POOL.find(c=>c.id===id); }
+function getCharLevel(id){ return inv[id]?.lvl || 0; }
+function shardsNeeded(lvl){ return Math.min(10, 2 + lvl); }
+
+function calcBuff(id){
+  const def=getCharDef(id);
+  if(!def) return { coinMult:1, scoreMult:1, timePlus:0, shieldChance:0, startCombo:0, revivePlus:0 };
+  const lvl=getCharLevel(id);
+  const b=def.buffBase, p=def.buffPerLv;
+  return {
+    coinMult: b.coinMult + (lvl-1)*p.coinMult,
+    scoreMult: b.scoreMult + (lvl-1)*p.scoreMult,
+    timePlus:  b.timePlus  + (lvl-1)*p.timePlus,
+    shieldChance: b.shieldChance + (lvl-1)*p.shieldChance,
+    startCombo: b.startCombo + (lvl-1)*p.startCombo,
+    revivePlus: b.revivePlus + (lvl-1)*p.revivePlus
+  };
+}
+
+function renderCharSidebar(){
+  const def=getCharDef(selectedCharId);
+  const lvl=getCharLevel(selectedCharId);
+  const buff=calcBuff(selectedCharId);
+
+  $("charTag").textContent = def ? `${def.icon} ${def.name} Lv${lvl}` : "🧙 Chưa chọn nhân vật";
+  $("charBox").innerHTML = def
+    ? `<b>${def.icon} ${def.name} (Lv${lvl})</b><br>${def.desc}<br>
+       Buff: +${Math.round((buff.coinMult-1)*100)}% xu • +${Math.round((buff.scoreMult-1)*100)}% điểm • +${buff.timePlus}s/câu • Khiên ${Math.round(buff.shieldChance*100)}% • Start combo +${buff.startCombo} • Vé +${buff.revivePlus}`
+    : "Chưa chọn";
+
+  const badges=$("charBadges"); badges.innerHTML="";
+  const mk=(t,on)=>{ const b=document.createElement("div"); b.className="badge"+(on?" on":""); b.textContent=t; badges.appendChild(b); };
+  mk("💰 Xu", buff.coinMult>1);
+  mk("⭐ Điểm", buff.scoreMult>1);
+  mk("⏱ Thời gian", buff.timePlus>0);
+  mk("🛡️ Khiên", buff.shieldChance>0);
+  mk("🔥 Combo", buff.startCombo>0);
+  mk("🎫 Hồi sinh", buff.revivePlus>0);
+}
+
+/* SFX */
+let audioCtx=null;
+function beep(freq,dur,type="sine",gain=0.06){
+  if(!SND) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type; o.frequency.value=freq; g.gain.value=gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); setTimeout(()=>o.stop(), dur);
+  }catch(_){}
+}
+function sfxGood(){ beep(880,110,"sine",0.07); setTimeout(()=>beep(1180,90,"sine",0.06),120); }
+function sfxBad(){ beep(220,160,"square",0.05); }
+function sfxSpin(){ beep(520,70,"triangle",0.05); }
+function sfxLoot(){ beep(660,120,"triangle",0.06); setTimeout(()=>beep(990,120,"triangle",0.06),140); }
+
+let toastTimer=null;
+function toast(msg){
+  const t=$("toast");
+  t.textContent=msg;
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("on"),1700);
+}
+
+/* Confetti */
+const fx=document.getElementById("fx"), ctx=fx.getContext("2d");
+let confetti=[];
+function resizeFx(){
+  fx.width = window.innerWidth * devicePixelRatio;
+  fx.height = window.innerHeight * devicePixelRatio;
+}
+window.addEventListener("resize", resizeFx);
+resizeFx();
+function confettiBurst(x,y,n=90){
+  for(let i=0;i<n;i++){
+    confetti.push({
+      x:x*devicePixelRatio, y:y*devicePixelRatio,
+      vx:(Math.random()*2-1)*6*devicePixelRatio,
+      vy:(Math.random()*2-1)*7*devicePixelRatio - 2*devicePixelRatio,
+      g:0.18*devicePixelRatio,
+      r:2+Math.random()*3, a:1, da:0.015+Math.random()*0.02
+    });
+  }
+}
+(function tickFx(){
+  ctx.clearRect(0,0,fx.width,fx.height);
+  confetti = confetti.filter(p=>p.a>0.02);
+  for(const p of confetti){
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.a-=p.da;
+    ctx.globalAlpha=p.a;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(11,116,255,.8)";
+    ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  requestAnimationFrame(tickFx);
+})();
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* =============================
+   GAME STATE
+============================= */
+const START_HEARTS=3;
+const Q_PER_LEVEL=10;    // 9 thường + 1 boss
+const BASE_TIME=20;
+const BLITZ_TIME=15;
+
+let bank=[], q=null;
+let level=1, idx=0;
+let score=0, coins=0;
+let hearts=START_HEARTS;
+let combo=0, streak=0;
+let correctCount=0, wrongCount=0;
+
+let bossHP=0;
+let shield=0;
+let used5050=false;
+let reviveTickets=1;
+let isBlitz=false;
+
+let timer=null;
+let t=0;
+
+function renderHearts(){
+  const wrap=$("hearts"); wrap.innerHTML="";
+  for(let i=0;i<START_HEARTS;i++){
+    const h=document.createElement("div");
+    h.className="heart"+(i<hearts?" on":"");
+    wrap.appendChild(h);
+  }
+}
+
+function comboMult(){
+  if(combo>=10) return 2.20;
+  if(combo>=7) return 1.90;
+  if(combo>=5) return 1.60;
+  if(combo>=3) return 1.35;
+  return 1.00;
+}
+function updateComboUI(){
+  const m=comboMult();
+  $("comboTxt").textContent=String(combo);
+  $("streakTxt").textContent=String(streak);
+  $("reviveTxt").textContent=String(reviveTickets);
+  const c=$("comboFlame");
+  c.textContent=`🔥 Combo x${m.toFixed(2)}`;
+  c.classList.toggle("hot", combo>=5);
+}
+function updateStats(){
+  $("coinTxt").textContent=String(coins);
+  $("scoreTxt").textContent=String(score);
+  $("lvlTxt").textContent=String(level);
+  $("progTxt").textContent=`${idx}/${Q_PER_LEVEL}`;
+  $("bar").style.width=`${Math.round((idx/Q_PER_LEVEL)*100)}%`;
+  const total=correctCount+wrongCount;
+  const acc= total ? Math.round((correctCount/total)*100) : 0;
+  $("accTxt").textContent=`${acc}%`;
+  updateComboUI();
+  renderCharSidebar();
+  $("titleBox").textContent = getRankTitle();
+}
+
+function isBoss(){ return idx===Q_PER_LEVEL-1; }
+
+function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
+function startTimer(){
+  stopTimer();
+  const buff=calcBuff(selectedCharId);
+  const base = isBlitz ? BLITZ_TIME : BASE_TIME;
+  t = base + buff.timePlus;
+  $("timeTxt").textContent=String(t);
+  timer=setInterval(()=>{
+    t--; $("timeTxt").textContent=String(t);
+    if(t<=0){ stopTimer(); timeOut(); }
+  },1000);
+}
+
+function fillBank(){ bank = shuffle([...QUESTION_BANK]); }
+function pickQuestion(){ if(bank.length===0) fillBank(); return bank.pop(); }
+
+function setBlitz(on){
+  isBlitz = on;
+  $("blitzTag").style.display = on ? "inline-flex" : "none";
+  if(on) toast("⚡ BLITZ! 15s — x2 điểm!");
+}
+function maybeBlitz(){
+  if(isBoss()) { setBlitz(false); return; }
+  if(Math.random() < 0.18) setBlitz(true);
+  else setBlitz(false);
+}
+
+function lockAnswers(){ [...$("answers").querySelectorAll("button")].forEach(b=>b.disabled=true); }
+function mark(correctIndex, chosenIndex){
+  const btns=[...$("answers").querySelectorAll("button")];
+  btns.forEach((b,i)=>{
+    if(i===correctIndex) b.classList.add("correct");
+    if(chosenIndex!==null && i===chosenIndex && chosenIndex!==correctIndex) b.classList.add("wrong");
+  });
+}
+
+function showQuestion(){
+  used5050=false;
+  q = pickQuestion();
+
+  $("bossWrap").style.display = isBoss() ? "inline-flex" : "none";
+  if(isBoss()){
+    bossHP=4; $("hp").style.width="100%";
+    $("qText").textContent = `👑 BOSS — ${q.q}`;
+  }else{
+    $("qText").textContent = q.q;
+  }
+
+  const answers=$("answers");
+  answers.innerHTML="";
+  q.a.forEach((txt,i)=>{
+    const b=document.createElement("button");
+    b.className="btn";
+    b.innerHTML=`<div class="key">${KEY[i]}</div><div>${txt}</div>`;
+    b.addEventListener("click", ()=>choose(i,b));
+    answers.appendChild(b);
+  });
+
+  renderHearts();
+  updateStats();
+  startTimer();
+}
+
+/* ======= BUFF CHẶN MẤT TIM ======= */
+function tryCharShield(){
+  const buff=calcBuff(selectedCharId);
+  if(buff.shieldChance<=0) return false;
+  const ok = Math.random() < buff.shieldChance;
+  if(ok){
+    toast(`🧙 Buff: CHẶN MẤT TIM! (${Math.round(buff.shieldChance*100)}%)`);
+    sfxLoot();
+  }
+  return ok;
+}
+
+function pointsForCorrect(){
+  const buff=calcBuff(selectedCharId);
+  let mult = comboMult();
+  let baseP = isBoss() ? 34 : 22;
+  let baseC = isBoss() ? 12 : 7;
+  if(isBlitz){ baseP *= 2; baseC = Math.round(baseC*1.3); }
+
+  baseP = Math.round(baseP * buff.scoreMult);
+  baseC = Math.round(baseC * buff.coinMult);
+
+  const p = Math.round(baseP * mult);
+  const c = Math.round(baseC * mult);
+  return {p,c, mult};
+}
+
+/* ======= STREAK REWARD ======= */
+const streakMilestones = new Set([3,5,7,10]);
+function streakReward(){
+  if(!streakMilestones.has(streak)) return;
+  const packs = [
+    {name:"💰 +25 xu", apply:()=>coins+=25},
+    {name:"⭐ +70 điểm", apply:()=>score+=70},
+    {name:"❤️ +1 tim", apply:()=>hearts=Math.min(START_HEARTS, hearts+1)},
+    {name:"🎫 +1 vé hồi sinh", apply:()=>reviveTickets+=1},
+    {name:"⚡ BLITZ câu tiếp", apply:()=>setBlitz(true)},
+  ];
+  const pick = packs[Math.floor(Math.random()*packs.length)];
+  pick.apply();
+  sfxLoot();
+  toast(`🎉 THƯỞNG CHUỖI ${streak}! ${pick.name}`);
+}
+
+/* ======= SPIN every 5 questions ======= */
+function spinWheel(){
+  stopTimer();
+  lockAnswers();
+
+  const prizes = [
+    {t:"💰 +40 xu", a:()=>coins+=40},
+    {t:"⭐ +120 điểm", a:()=>score+=120},
+    {t:"🛡️ Khiên", a:()=>shield=1},
+    {t:"🎫 +1 vé hồi sinh", a:()=>reviveTickets+=1},
+    {t:"❤️ +1 tim", a:()=>hearts=Math.min(START_HEARTS, hearts+1)},
+    {t:"🔥 Combo +2", a:()=>combo+=2},
+    {t:"😈 Bẫy: -10 xu", a:()=>coins=Math.max(0, coins-10)},
+  ];
+
+  const node=document.createElement("div");
+  node.innerHTML = `
+    <div class="muted">🎰 Vòng quay thưởng (mỗi 5 câu). Bấm QUAY để nhận.</div>
+    <div style="height:10px"></div>
+    <div style="border:1px solid rgba(11,116,255,.18); border-radius:16px; background:rgba(255,255,255,.85); padding:12px">
+      <b id="spinText">Sẵn sàng quay…</b>
+      <div class="muted" style="margin-top:6px">Hiệu ứng “mở thưởng” làm game cuốn hơn.</div>
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btnTiny gold" id="spinBtn">QUAY</button>
+        <button class="btnTiny" id="spinSkip">BỎ QUA</button>
+      </div>
+    </div>
+  `;
+  openModal("🎰 Vòng quay", node);
+
+  let spinning=false;
+  node.querySelector("#spinBtn").addEventListener("click", ()=>{
+    if(spinning) return;
+    spinning=true;
+    let count=0, tempIndex=0;
+    const spinInterval=setInterval(()=>{
+      sfxSpin();
+      tempIndex = (tempIndex+1) % prizes.length;
+      node.querySelector("#spinText").textContent = `Đang quay… ${prizes[tempIndex].t}`;
+      count++;
+      if(count>18){
+        clearInterval(spinInterval);
+        const win = prizes[Math.floor(Math.random()*prizes.length)];
+        win.a();
+        sfxLoot();
+        toast(`🎰 Trúng: ${win.t}`);
+        updateStats();
+        closeModal();
+        setTimeout(()=>continueAfterModal(), 200);
+      }
+    }, 70);
+  });
+
+  node.querySelector("#spinSkip").addEventListener("click", ()=>{
+    closeModal();
+    setTimeout(()=>continueAfterModal(), 120);
+  });
+}
+
+function continueAfterModal(){
+  renderHearts();
+  updateStats();
+  if(idx>=Q_PER_LEVEL) return levelUp();
+  showQuestion();
+}
+
+/* ======= MODAL ======= */
+function openModal(title, node){
+  $("modalTitle").textContent=title;
+  const b=$("modalBody"); b.innerHTML=""; b.appendChild(node);
+  $("overlay").style.display="flex";
+}
+function closeModal(){ $("overlay").style.display="none"; }
+$("modalClose").addEventListener("click", closeModal);
+$("overlay").addEventListener("click",(e)=>{ if(e.target===$("overlay")) closeModal(); });
+
+/* ======= POWERUPS ======= */
+function spend(pay){
+  if(coins<pay){ toast("Chưa đủ xu!"); sfxBad(); return false; }
+  coins-=pay; updateStats(); return true;
+}
+function use5050(){
+  if(!q) return;
+  if(used5050){ toast("Câu này đã dùng 50:50!"); return; }
+  if(!spend(18)) return;
+  used5050=true;
+
+  const wrongs=[0,1,2,3].filter(x=>x!==q.correct);
+  shuffle(wrongs);
+  const hide=wrongs.slice(0,2);
+
+  const btns=[...$("answers").querySelectorAll("button")];
+  btns.forEach((b,i)=>{
+    if(hide.includes(i)){
+      b.disabled=true;
+      b.style.opacity="0.45";
+      b.style.filter="grayscale(1)";
+    }
+  });
+  toast("🌓 Loại 2 đáp án sai!");
+}
+function useFreeze(){
+  if(!q) return;
+  if(!spend(12)) return;
+  t = Math.min(70, t + 5);
+  $("timeTxt").textContent=String(t);
+  toast("🧊 +5 giây!");
+}
+function useShield(){
+  if(!q) return;
+  if(shield){ toast("Bạn đã có khiên rồi!"); return; }
+  if(!spend(22)) return;
+  shield=1;
+  toast("🛡️ Khiên: chặn 1 lần mất tim!");
+}
+
+/* ======= AI HINT ======= */
+function hint(){
+  if(!q) return;
+  const conf=Math.min(0.92, 0.55 + Math.random()*0.30 + (combo>=3 ? 0.06 : 0));
+  const willOk=Math.random()<conf;
+  const pick=willOk ? q.correct : ([0,1,2,3].filter(x=>x!==q.correct))[Math.floor(Math.random()*3)];
+  const alt= pick===q.correct ? ([0,1,2,3].filter(x=>x!==q.correct))[Math.floor(Math.random()*3)] : q.correct;
+  $("aiBox").innerHTML = `Gợi ý: nghiêng về <b>${KEY[pick]}</b>, cân nhắc <b>${KEY[alt]}</b>. (~${Math.round(conf*100)}%)`;
+}
+
+/* ======= GAME FLOW ======= */
+function timeOut(){
+  lockAnswers();
+  mark(q.correct, null);
+  wrongCount++; streak=0; combo=0;
+
+  let blocked=false;
+  if(shield){ shield=0; toast("🛡️ Khiên chặn mất tim (hết giờ)!"); blocked=true; }
+  else if(tryCharShield()){ blocked=true; }
+  if(!blocked) hearts--;
+
+  sfxBad();
+  $("note").textContent = `⏰ Hết giờ! Đáp án đúng: ${KEY[q.correct]}.`;
+
+  idx++;
+  renderHearts();
+  updateStats();
+
+  if(hearts<=0) return maybeRevive();
+  afterQuestion();
+}
+
+function applyBossDamage(){
+  bossHP=Math.max(0,bossHP-1);
+  $("hp").style.width = `${(bossHP/4)*100}%`;
+  return bossHP===0;
+}
+
+function afterQuestion(){
+  if(idx>0 && idx%5===0 && idx<=Q_PER_LEVEL-1){
+    return spinWheel();
+  }
+  maybeBlitz();
+  if(idx>=Q_PER_LEVEL) return levelUp();
+  setTimeout(()=>showQuestion(), 480);
+}
+
+function maybeRevive(){
+  if(reviveTickets>0){
+    reviveTickets--;
+    hearts=1;
+    toast("🎫 Hồi sinh! Bạn được 1 tim.");
+    renderHearts(); updateStats();
+    setTimeout(()=>showQuestion(), 650);
+  }else{
+    return gameOver();
+  }
+}
+
+function choose(i, btnEl){
+  if(!q) return;
+  stopTimer();
+  lockAnswers();
+
+  const ok = i===q.correct;
+
+  if(isBoss()){
+    if(ok){
+      sfxGood();
+      combo++; streak++; correctCount++;
+      const r=pointsForCorrect();
+      score+=r.p; coins+=r.c;
+
+      const rect=btnEl.getBoundingClientRect();
+      confettiBurst(rect.left+rect.width/2, rect.top+rect.height/2, 80);
+
+      mark(q.correct,i);
+      const killed = applyBossDamage();
+
+      $("note").textContent = killed
+        ? `👑 HẠ BOSS! +${r.p} điểm, +${r.c} xu.`
+        : `✅ Trúng boss! +${r.p} điểm, +${r.c} xu.`;
+
+      streakReward();
+      updateStats();
+
+      setTimeout(()=>{
+        if(killed){
+          idx++;
+          coins += 35; score += 120;
+          toast("👑 Boss rơi thưởng: +35 xu, +120 điểm!");
+          setBlitz(false);
+          updateStats();
+          levelUp();
+        }else{
+          showQuestion();
+        }
+      }, 650);
+      return;
+    }else{
+      sfxBad();
+      wrongCount++; streak=0; combo=0;
+
+      let blocked=false;
+      if(shield){ shield=0; toast("🛡️ Khiên chặn mất tim!"); blocked=true; }
+      else if(tryCharShield()){ blocked=true; }
+      if(!blocked) hearts--;
+
+      mark(q.correct,i);
+      $("note").textContent = `❌ Sai! Đáp án đúng: ${KEY[q.correct]}.`;
+      renderHearts(); updateStats();
+      if(hearts<=0) return maybeRevive();
+      setTimeout(()=>showQuestion(), 650);
+      return;
+    }
+  }
+
+  mark(q.correct,i);
+
+  if(ok){
+    sfxGood();
+    combo++; streak++; correctCount++;
+    const r=pointsForCorrect();
+    score+=r.p; coins+=r.c;
+
+    const rect=btnEl.getBoundingClientRect();
+    confettiBurst(rect.left+rect.width/2, rect.top+rect.height/2, 90);
+
+    $("note").textContent = `✅ Đúng! +${r.p} điểm, +${r.c} xu (x${r.mult.toFixed(2)}).`;
+    streakReward();
+  }else{
+    sfxBad();
+    wrongCount++; streak=0; combo=0;
+
+    const nearMiss = Math.random() < 0.35;
+    let blocked=false;
+    if(nearMiss){
+      toast("😵 Suýt đúng! Không mất tim (may mắn)!");
+      blocked=true;
+    }else if(shield){
+      shield=0; toast("🛡️ Khiên chặn mất tim!"); blocked=true;
+    }else if(tryCharShield()){
+      blocked=true;
+    }
+    if(!blocked) hearts--;
+
+    $("note").textContent = `❌ Sai! Đáp án đúng: ${KEY[q.correct]}.`;
+  }
+
+  setBlitz(false);
+
+  idx++;
+  renderHearts();
+  updateStats();
+
+  if(hearts<=0) return maybeRevive();
+  afterQuestion();
+}
+
+function levelUp(){
+  stopTimer();
+  level++;
+  idx=0;
+  coins+=20; score+=60;
+  sfxLoot();
+  toast(`🎉 Qua ải! +60 điểm, +20 xu. Ải ${level}!`);
+  fillBank();
+  setBlitz(false);
+  updateStats();
+  setTimeout(()=>showQuestion(), 650);
+}
+
+function gameOver(){
+  stopTimer();
+  lockAnswers();
+  $("bossWrap").style.display="none";
+  $("qText").textContent="💥 Game Over!";
+  $("answers").innerHTML="";
+  $("note").textContent =
+`Điểm: ${score} • Xu: ${coins} • Ải: ${level}
+Đúng: ${correctCount} • Sai: ${wrongCount}
+Danh hiệu: ${getRankTitle()}`;
+  updateStats();
+}
+
+function getRankTitle(){
+  const total=correctCount+wrongCount;
+  const acc = total ? (correctCount/total) : 0;
+  const m = comboMult();
+  if(acc>=0.9 && score>=900) return "👑 Thủ khoa huyền thoại";
+  if(acc>=0.8 && m>=1.6) return "🔥 Chiến thần combo";
+  if(acc>=0.8) return "🎯 Xạ thủ chính xác";
+  if(score>=600) return "⚡ Tay nhanh hơn não";
+  return "🌱 Tân thủ đang lên";
+}
+
+/* =============================
+   GACHA / COLLECTION
+============================= */
+function rollRarity(){
+  const r=Math.random()*100;
+  if(r<2) return "Legendary";
+  if(r<12) return "Epic";
+  if(r<40) return "Rare";
+  return "Common";
+}
+function pickFromRarity(rar){
+  const list=CHAR_POOL.filter(c=>c.rarity===rar);
+  return list[Math.floor(Math.random()*list.length)];
+}
+function addCharOrShard(id){
+  if(!inv[id]){
+    inv[id]={lvl:1, shards:0};
+    store.set("qh_inv", inv);
+    return {type:"new", lvl:1};
+  }
+  inv[id].shards = (inv[id].shards||0) + 1;
+  let upgraded=false;
+  while(inv[id].shards >= shardsNeeded(inv[id].lvl)){
+    inv[id].shards -= shardsNeeded(inv[id].lvl);
+    inv[id].lvl += 1;
+    upgraded=true;
+  }
+  store.set("qh_inv", inv);
+  return {type:"dup", upgraded, lvl:inv[id].lvl, shards:inv[id].shards};
+}
+
+function openCharsModal(){
+  const node=document.createElement("div");
+  node.className="grid3";
+
+  const left=document.createElement("div");
+  left.innerHTML = `<div class="muted">Mở rương bằng xu → trùng nhân vật thành mảnh → đủ mảnh lên Lv → buff mạnh dần.</div>
+                    <div style="height:10px"></div>`;
+  const grid=document.createElement("div");
+  grid.className="charGrid";
+
+  CHAR_POOL.forEach(def=>{
+    const owned=!!inv[def.id];
+    const lvl=owned?inv[def.id].lvl:0;
+    const shards=owned?(inv[def.id].shards||0):0;
+    const need=owned?shardsNeeded(lvl):0;
+
+    const card=document.createElement("div");
+    card.className="charCard" + (def.id===selectedCharId ? " selected":"");
+    card.innerHTML = `
+      <div class="charIcon">${def.icon}</div>
+      <div class="charMeta" style="min-width:0">
+        <b>${def.name} ${owned?`Lv${lvl}`:"(Chưa có)"}</b>
+        <div class="rar">${rarityLabel(def.rarity)}</div>
+        <div class="desc">${def.desc}</div>
+        <div class="muted" style="margin-top:8px">
+          ${owned ? `Mảnh: ${shards}/${need}` : `Mở rương để sở hữu`}
+        </div>
+        <div class="miniRow">
+          ${owned ? `<button class="btnTiny gold" data-select="${def.id}">Chọn</button>` : ``}
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  left.appendChild(grid);
+
+  const right=document.createElement("div");
+  right.innerHTML = `
+    <div style="border:1px solid rgba(11,116,255,.18); border-radius:16px; background:rgba(255,255,255,.85); padding:12px">
+      <b>🎁 Mở Rương Nhân Vật</b>
+      <div class="muted" style="margin-top:6px">
+        Giá: <b>60 xu</b>. Tỷ lệ: Common 60% • Rare 28% • Epic 10% • Legendary 2%.
+      </div>
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btnTiny gold" id="openCrate">Mở rương (60 xu)</button>
+        <button class="btnTiny" id="open10">Mở x10 (540 xu)</button>
+      </div>
+      <div style="margin-top:10px" class="muted" id="gachaLog">Mẹo: chơi giỏi → nhiều xu → mở rương nhanh.</div>
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div style="border:1px solid rgba(11,116,255,.18); border-radius:16px; background:rgba(255,255,255,.85); padding:12px">
+      <b>✨ Buff đang dùng</b>
+      <div class="muted" style="margin-top:6px" id="buffNow">-</div>
+      <div style="margin-top:10px">
+        <button class="btnTiny" id="renameBtn">Đổi tên người chơi</button>
+      </div>
+    </div>
+  `;
+
+  node.appendChild(left);
+  node.appendChild(right);
+
+  openModal("🧙 Sưu tầm nhân vật", node);
+
+  node.querySelectorAll("[data-select]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id=btn.getAttribute("data-select");
+      selectedCharId=id;
+      store.set("qh_selChar", selectedCharId);
+      toast("✅ Đã chọn nhân vật!");
+      updateStats();
+      closeModal();
+    });
+  });
+
+  const def=getCharDef(selectedCharId);
+  const lvl=getCharLevel(selectedCharId);
+  const b=calcBuff(selectedCharId);
+  right.querySelector("#buffNow").innerHTML =
+    def ? `${def.icon} <b>${def.name}</b> Lv${lvl}<br>
+    +${Math.round((b.coinMult-1)*100)}% xu • +${Math.round((b.scoreMult-1)*100)}% điểm • +${b.timePlus}s/câu • Khiên ${Math.round(b.shieldChance*100)}% • Start combo +${b.startCombo} • Vé +${b.revivePlus}`
+    : "-";
+
+  function doOpen(times){
+    const cost = times===10 ? 540 : 60;
+    if(coins < cost){ toast("❌ Không đủ xu để mở!"); sfxBad(); return; }
+    coins -= cost;
+
+    const log = right.querySelector("#gachaLog");
+    let results=[];
+    for(let k=0;k<times;k++){
+      const rar=rollRarity();
+      const def=pickFromRarity(rar);
+      const res=addCharOrShard(def.id);
+      results.push({def, rar, res});
+    }
+
+    sfxLoot();
+    confettiBurst(window.innerWidth/2, window.innerHeight/2 - 40, times===10 ? 180 : 120);
+
+    const show = results.slice(0,6).map(x=>{
+      const tag = x.res.type==="new" ? "MỚI" : (x.res.upgraded ? "LÊN LV!" : "MẢNH");
+      return `• ${x.def.icon} ${x.def.name} (${x.rar}) — ${tag}`;
+    }).join("<br>");
+    log.innerHTML = `<b>Kết quả:</b><br>${show}${results.length>6?`<br>… và ${results.length-6} kết quả nữa`:""}`;
+
+    store.set("qh_inv", inv);
+    updateStats();
+  }
+
+  right.querySelector("#openCrate").addEventListener("click", ()=>doOpen(1));
+  right.querySelector("#open10").addEventListener("click", ()=>doOpen(10));
+
+  right.querySelector("#renameBtn").addEventListener("click", ()=>{
+    const name = prompt("Nhập tên người chơi:", player.name || "Người chơi");
+    if(name && name.trim()){
+      player.name = name.trim().slice(0,18);
+      $("playerName").textContent = player.name;
+      store.set("qh_player", player);
+      toast("✅ Đã đổi tên!");
+    }
+  });
+}
+
+/* =============================
+   RESET / START
+============================= */
+function resetGame(startNow=false){
+  stopTimer();
+  fillBank();
+  q=null;
+  level=1; idx=0;
+  score=0; coins=0;
+  hearts=START_HEARTS;
+  combo=0; streak=0;
+  correctCount=0; wrongCount=0;
+  bossHP=0; shield=0; used5050=false;
+
+  reviveTickets=1;
+
+  // apply character start buffs
+  const b=calcBuff(selectedCharId);
+  combo = b.startCombo || 0;
+  reviveTickets += (b.revivePlus || 0);
+
+  setBlitz(false);
+
+  $("bossWrap").style.display="none";
+  $("qText").textContent = startNow ? "Vào game..." : "Nhấn “Bắt đầu” để chơi.";
+  $("answers").innerHTML="";
+  renderHearts();
+  updateStats();
+
+  if(startNow){
+    confettiBurst(window.innerWidth/2, window.innerHeight/2 - 60, 120);
+    showQuestion();
+  }
+}
+
+/* =============================
+   BUTTONS + EVENTS
+============================= */
+$("btnStart").addEventListener("click", ()=>resetGame(true));
+$("btnChars").addEventListener("click", openCharsModal);
+$("btn5050").addEventListener("click", use5050);
+$("btnFreeze").addEventListener("click", useFreeze);
+$("btnShield").addEventListener("click", useShield);
+$("btnRestart").addEventListener("click", ()=>resetGame(true));
+$("btnSound").addEventListener("click", ()=>{
+  SND=!SND;
+  $("btnSound").textContent = SND ? "🔊 Âm thanh: ON" : "🔇 Âm thanh: OFF";
+  toast(SND ? "Âm thanh bật" : "Âm thanh tắt");
+});
+document.addEventListener("keydown",(e)=>{ if(e.key.toLowerCase()==="h") hint(); });
+
+/* init */
+// Back button (mở từ tab mới thì đóng tab; nếu không thì quay về trang chính)
+document.getElementById("btnBack").addEventListener("click", ()=>{
+  try{
+    if(window.opener){ window.close(); return; }
+  }catch(_){ }
+  // fallback
+  window.location.href = "./index.html";
+});
+renderCharSidebar();
+resetGame(false);
+</script>
+</body>
+</html>
